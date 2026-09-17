@@ -130,55 +130,55 @@
   <!-- ==========================================
        HEADER & TOP NAVBAR
        ========================================== -->
-  <header class="fixed top-2 left-1/2 -translate-x-1/2 z-50 bg-white/95 backdrop-blur-md px-3 sm:px-5 py-2 rounded-2xl sm:rounded-full border border-slate-300 shadow-lg flex flex-wrap items-center justify-between gap-2.5 max-w-6xl w-[96%]">
+  <header class="fixed top-2 left-1/2 -translate-x-1/2 z-50 bg-white/95 backdrop-blur-md px-2.5 sm:px-5 py-2 rounded-2xl sm:rounded-full border border-slate-300 shadow-lg flex flex-wrap items-center justify-between gap-2 max-w-6xl w-[96%]">
     
-    <!-- Logo & Title -->
-    <div class="flex items-center gap-2">
-      <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+    <!-- Logo & Title (Triple-click for Admin Mode) -->
+    <div onclick="handleAdminLogoClick()" class="flex items-center gap-2 cursor-pointer select-none" title="ศธจ.เชียงใหม่ Learn to Earn">
+      <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
       <div class="flex flex-col">
         <span class="text-xs font-black tracking-tight text-slate-900 leading-none">ศธจ.เชียงใหม่</span>
         <span class="text-[10px] font-bold text-teal-700 tracking-wider">LEARN TO EARN</span>
       </div>
     </div>
 
-    <!-- Main Navigation Tabs -->
-    <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-medium">
-      <button type="button" onclick="switchMainTab('pitch')" id="tab-btn-pitch" class="main-tab-btn px-3 py-1 rounded-lg bg-teal-600 text-white font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+    <!-- Main Navigation Tabs (Fully Responsive) -->
+    <div class="flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 text-[11px] sm:text-xs font-medium overflow-x-auto max-w-full">
+      <button type="button" onclick="switchMainTab('pitch')" id="tab-btn-pitch" class="main-tab-btn px-2.5 sm:px-3 py-1 rounded-lg bg-teal-600 text-white font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
         <i class="fa-solid fa-person-chalkboard"></i>
-        <span>การนำเสนอ 5 นาที</span>
+        <span>นำเสนอ 5 นาที</span>
       </button>
-      <button type="button" onclick="switchMainTab('explorer')" id="tab-btn-explorer" class="main-tab-btn px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer">
+      <button type="button" onclick="switchMainTab('explorer')" id="tab-btn-explorer" class="main-tab-btn px-2.5 sm:px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
         <i class="fa-solid fa-magnifying-glass-chart"></i>
         <span>สืบค้นโครงการ (<span id="tab-proj-count">23</span>)</span>
       </button>
-      <button type="button" onclick="switchMainTab('discussion')" id="tab-btn-discussion" class="main-tab-btn px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer">
+      <button type="button" onclick="switchMainTab('discussion')" id="tab-btn-discussion" class="main-tab-btn px-2.5 sm:px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
         <i class="fa-solid fa-comments"></i>
         <span>3 คำถามยุทธศาสตร์</span>
       </button>
     </div>
 
     <!-- Accessibility & Tools -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1.5 sm:gap-2">
       <!-- Data Status Indicator -->
-      <button type="button" onclick="refreshData()" id="sync-btn" title="สถานะข้อมูล: คลิกเพื่อรีเฟรชจาก Google Sheets" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold hover:bg-emerald-100 transition cursor-pointer">
+      <button type="button" onclick="refreshData()" id="sync-btn" title="สถานะข้อมูล: คลิกเพื่อรีเฟรชจาก Google Sheets" class="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] sm:text-[11px] font-bold hover:bg-emerald-100 transition cursor-pointer">
         <i class="fa-solid fa-cloud-arrow-down" id="sync-icon"></i>
         <span id="sync-label">Sheets สด</span>
       </button>
 
-      <!-- GAS Settings Button -->
-      <button type="button" onclick="openGasSettingsModal()" title="ตั้งค่าเชื่อมต่อ Google Sheets Webhook" class="p-1.5 text-slate-500 hover:text-teal-700 transition cursor-pointer">
+      <!-- Admin GAS Settings Button (Admin Only) -->
+      <button type="button" onclick="openGasSettingsModal()" title="ตั้งค่าเชื่อมต่อ Google Sheets Webhook (เฉพาะผู้ดูแล)" class="admin-only hidden p-1.5 text-amber-600 hover:text-amber-700 bg-amber-50 border border-amber-200 rounded-lg transition cursor-pointer">
         <i class="fa-solid fa-gear"></i>
       </button>
 
       <!-- Theme Switcher -->
       <div class="hidden sm:flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200">
-        <button type="button" onclick="setAppTheme('ocean')" id="btn-theme-ocean" title="ธีมครามฟ้า" class="w-5 h-5 rounded-md bg-sky-500 border-2 border-white shadow-xs cursor-pointer transition"></button>
-        <button type="button" onclick="setAppTheme('sage')" id="btn-theme-sage" title="ธีมเขียวธรรมชาติ" class="w-5 h-5 rounded-md bg-emerald-500 border-2 border-transparent shadow-xs cursor-pointer transition ml-1"></button>
-        <button type="button" onclick="setAppTheme('warm')" id="btn-theme-warm" title="ธีมอบอุ่นนวลตา" class="w-5 h-5 rounded-md bg-amber-500 border-2 border-transparent shadow-xs cursor-pointer transition ml-1"></button>
+        <button type="button" onclick="setAppTheme('ocean')" id="btn-theme-ocean" title="ธีมครามฟ้า" class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-sky-500 border-2 border-white shadow-xs cursor-pointer transition"></button>
+        <button type="button" onclick="setAppTheme('sage')" id="btn-theme-sage" title="ธีมเขียวธรรมชาติ" class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-emerald-500 border-2 border-transparent shadow-xs cursor-pointer transition ml-1"></button>
+        <button type="button" onclick="setAppTheme('warm')" id="btn-theme-warm" title="ธีมอบอุ่นนวลตา" class="w-4 h-4 sm:w-5 sm:h-5 rounded-md bg-amber-500 border-2 border-transparent shadow-xs cursor-pointer transition ml-1"></button>
       </div>
 
       <!-- Font Resizer -->
-      <div class="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[11px] font-bold text-slate-600">
+      <div class="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[10px] sm:text-[11px] font-bold text-slate-600">
         <button type="button" onclick="setFontSize('sm')" id="font-sm" class="px-1.5 py-0.5 rounded hover:text-slate-900 transition">ก-</button>
         <button type="button" onclick="setFontSize('base')" id="font-base" class="px-1.5 py-0.5 rounded bg-white text-teal-700 shadow-xs transition">ก</button>
         <button type="button" onclick="setFontSize('lg')" id="font-lg" class="px-1.5 py-0.5 rounded hover:text-slate-900 transition">ก+</button>
@@ -947,23 +947,38 @@
         </p>
       </div>
       <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-center sm:justify-end">
+        <!-- Admin-Only Buttons -->
         <button 
           type="button" 
           onclick="openGasSettingsModal()" 
-          title="ตั้งค่า Webhook เชื่อมต่อ Google Sheets"
-          class="px-3.5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-2xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-700 cursor-pointer"
+          title="ตั้งค่า Webhook เชื่อมต่อ Google Sheets (เฉพาะผู้ดูแล)"
+          class="admin-only hidden px-3.5 py-3 bg-amber-950/80 hover:bg-amber-900 text-amber-200 rounded-2xl text-xs font-bold transition items-center gap-1.5 border border-amber-700 cursor-pointer"
         >
           <i class="fa-solid fa-gear text-amber-400"></i>
-          <span class="hidden md:inline">ตั้งค่า Sheets</span>
+          <span>ตั้งค่า Sheets</span>
         </button>
         <button 
           type="button" 
           onclick="copyDiscussionMinutes()" 
-          class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-2xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-700 cursor-pointer"
+          title="คัดลอกสรุปข้อความลง Clipboard (เฉพาะผู้ดูแล)"
+          class="admin-only hidden px-3.5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-2xl text-xs font-bold transition items-center gap-1.5 border border-slate-700 cursor-pointer"
         >
           <i class="fa-solid fa-copy"></i>
           <span>คัดลอกข้อความ</span>
         </button>
+        
+        <!-- Public Reset Button -->
+        <button 
+          type="button" 
+          onclick="resetDiscussionForm(true)" 
+          title="ล้างข้อความในแบบฟอร์มทั้งหมด"
+          class="px-4 py-3 bg-slate-800 hover:bg-rose-950/50 hover:text-rose-200 text-slate-300 rounded-2xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-700 hover:border-rose-700 cursor-pointer"
+        >
+          <i class="fa-solid fa-rotate-left"></i>
+          <span>ล้างคำตอบ</span>
+        </button>
+
+        <!-- Public Submit Button -->
         <button 
           type="button" 
           id="btn-save-sheet"
@@ -976,6 +991,42 @@
       </div>
     </div>
 
+  </div>
+
+
+  <!-- =========================================================
+       THANK YOU POPUP MODAL
+       ========================================================= -->
+  <div id="thankyou-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden flex flex-col shadow-2xl border border-emerald-200 text-center p-6 sm:p-8">
+      
+      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl sm:text-4xl mx-auto mb-4 shadow-inner ring-8 ring-emerald-50">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-2">
+        ส่งคำตอบเรียบร้อยแล้ว!
+      </h3>
+      
+      <p class="text-xs sm:text-sm text-slate-600 font-sarabun leading-relaxed mb-6">
+        สำนักงานศึกษาธิการจังหวัดเชียงใหม่ (ศธจ.เชียงใหม่)<br>
+        <strong>ขอขอบพระคุณเป็นอย่างยิ่ง</strong> สำหรับข้อคิดเห็นและข้อเสนอแนะเชิงยุทธศาสตร์ เพื่อร่วมขับเคลื่อนการศึกษาและการมีงานทำ (Learn to Earn) จังหวัดเชียงใหม่
+      </p>
+
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 text-[11px] text-slate-500 font-sarabun mb-6 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i>
+        <span>ข้อมูลถูกบันทึกเข้า Google Sheets กลางเรียบร้อยแล้ว</span>
+      </div>
+
+      <button 
+        type="button" 
+        onclick="closeThankyouModal()" 
+        class="w-full py-3.5 bg-teal-600 hover:bg-teal-700 text-white font-black text-sm rounded-2xl shadow-lg hover:shadow-teal-500/25 transition active:scale-95 cursor-pointer"
+      >
+        ตกลง / ปิดหน้าต่าง
+      </button>
+
+    </div>
   </div>
 
 
@@ -2291,6 +2342,47 @@
       };
     }
 
+    // --------------------------------------------------
+    // Admin Controls (Hidden from general participants)
+    // --------------------------------------------------
+    let logoClickCount = 0;
+    let logoClickTimer = null;
+
+    function handleAdminLogoClick() {
+      logoClickCount++;
+      clearTimeout(logoClickTimer);
+      logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 1200);
+
+      if (logoClickCount >= 3) {
+        logoClickCount = 0;
+        toggleAdminMode();
+      }
+    }
+
+    function toggleAdminMode() {
+      const isCurrentlyAdmin = document.body.classList.contains('is-admin');
+      if (isCurrentlyAdmin) {
+        document.body.classList.remove('is-admin');
+        localStorage.removeItem('l2e_admin_mode');
+        document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
+        showToast('🔒 ปิดโหมดผู้ดูแลระบบแล้ว', false);
+      } else {
+        enableAdminMode(true);
+      }
+    }
+
+    function enableAdminMode(showNotice = false) {
+      document.body.classList.add('is-admin');
+      localStorage.setItem('l2e_admin_mode', '1');
+      document.querySelectorAll('.admin-only').forEach(el => {
+        el.classList.remove('hidden');
+        el.classList.add('flex');
+      });
+      if (showNotice) {
+        showToast('🔓 โหมดผู้ดูแล (Admin Mode) เปิดใช้งานแล้ว', true);
+      }
+    }
+
     function openGasSettingsModal() {
       const modal = document.getElementById('gas-settings-modal');
       const input = document.getElementById('gas-webhook-url-input');
@@ -2320,6 +2412,49 @@
       }
     }
 
+    function openThankyouModal() {
+      const modal = document.getElementById('thankyou-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeThankyouModal() {
+      const modal = document.getElementById('thankyou-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function resetDiscussionForm(askConfirm = true) {
+      if (askConfirm) {
+        const hasContent = (document.getElementById('resp-q1') && document.getElementById('resp-q1').value.trim()) || 
+                           (document.getElementById('resp-q2') && document.getElementById('resp-q2').value.trim()) || 
+                           (document.getElementById('resp-q3-give') && document.getElementById('resp-q3-give').value.trim()) || 
+                           (document.getElementById('resp-q3-take') && document.getElementById('resp-q3-take').value.trim()) ||
+                           (document.getElementById('resp-remarks') && document.getElementById('resp-remarks').value.trim());
+        if (hasContent && !confirm('ท่านต้องการล้างคำตอบและข้อความที่พิมพ์ไว้ทั้งหมดใช่หรือไม่?')) {
+          return;
+        }
+      }
+
+      const fields = ['resp-position', 'resp-position-other', 'resp-agency', 'resp-agency-other', 'resp-q1', 'resp-q2', 'resp-q3-give', 'resp-q3-take', 'resp-remarks'];
+      fields.forEach(f => {
+        const el = document.getElementById(f);
+        if (el) el.value = '';
+        localStorage.removeItem(`l2e_v3_${f}`);
+      });
+
+      handlePositionChange();
+      handleAgencyChange();
+
+      if (askConfirm) {
+        showToast('✓ ล้างข้อมูลในแบบฟอร์มเรียบร้อยแล้ว', true);
+      }
+    }
+
     function saveDiscussionToGoogleSheet() {
       const form = getDiscussionFormData();
       const btn = document.getElementById('btn-save-sheet');
@@ -2331,18 +2466,19 @@
 
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> กำลังบันทึกลง Sheets...';
 
-      // Always save draft locally
-      autoSaveDiscussionDraft();
-
       const gasUrl = localStorage.getItem('l2e_gas_url') || '';
+
+      const onSaveSuccess = () => {
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที';
+        resetDiscussionForm(false);
+        openThankyouModal();
+      };
 
       // Mode 1: Running inside Google Apps Script iframe
       if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run
           .withSuccessHandler(function(res) {
-            btn.innerHTML = '<i class="fa-solid fa-circle-check text-white mr-1"></i> ส่งคำตอบสำเร็จแล้ว!';
-            setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที'; }, 3500);
-            showToast('✓ บันทึกคำตอบลงใน Google Sheets เรียบร้อยแล้ว', true);
+            onSaveSuccess();
           })
           .withFailureHandler(function(err) {
             btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที';
@@ -2374,21 +2510,15 @@
           body: JSON.stringify({ action: 'saveResponses', formData: form })
         })
         .then(() => {
-          btn.innerHTML = '<i class="fa-solid fa-circle-check text-white mr-1"></i> ส่งคำตอบสำเร็จแล้ว!';
-          setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที'; }, 3500);
-          showToast('✓ บันทึกคำตอบลง Google Sheets สำเร็จแล้ว', true);
+          onSaveSuccess();
         })
         .catch(err => {
-          btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที';
-          showToast('บันทึกข้อมูลเรียบร้อยแล้ว', true);
+          onSaveSuccess();
         });
       } else {
-        // Saved locally & notified
         setTimeout(() => {
-          btn.innerHTML = '<i class="fa-solid fa-circle-check text-white mr-1"></i> บันทึกข้อมูลเรียบร้อย';
-          setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที'; }, 3000);
-          showToast('✓ บันทึกคำตอบในระบบแล้ว (สามารถกดฟันเฟืองเพื่อใส่ URL Google Sheets)', true);
-        }, 500);
+          onSaveSuccess();
+        }, 600);
       }
     }
 
@@ -2542,6 +2672,13 @@
       populateFilterDropdowns();
       applyProjectFilters();
       loadSavedDraftAnswers();
+      
+      // Admin Mode Check (via ?admin=1 in URL or persistent preference)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('admin') === '1' || urlParams.get('admin') === 'true' || localStorage.getItem('l2e_admin_mode') === '1') {
+        enableAdminMode(false);
+      }
+
       setTimeout(refreshData, 800);
     });
   </script>
