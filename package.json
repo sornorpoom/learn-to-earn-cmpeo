@@ -1,0 +1,20 @@
+{
+  "name": "learn-to-earn-chiangmai",
+  "version": "1.0.0",
+  "description": "Learn to Earn Chiang Mai Strategy Presentation & Platform (ศธจ.เชียงใหม่)",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": [
+    "learn-to-earn",
+    "chiangmai",
+    "education",
+    "strategy",
+    "dashboard",
+    "vercel"
+  ],
+  "author": "สำนักงานศึกษาธิการจังหวัดเชียงใหม่ (ศธจ.เชียงใหม่)",
+  "license": "MIT"
+}

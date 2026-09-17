@@ -1,0 +1,2322 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="ocean">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn to Earn Chiang Mai — Strategy Platform</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            prompt: ['Prompt', 'sans-serif'],
+            sarabun: ['Sarabun', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --font-scale: 1.05;
+      --base-font: 16px;
+    }
+    html {
+      font-size: calc(var(--base-font) * var(--font-scale)) !important;
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Prompt', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* 3 ธีมโทนสว่าง */
+    html[data-theme="ocean"] {
+      --bg-main: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --text-main: #0f172a;
+      --text-sub: #475569;
+      --quote-bg: #eff6ff;
+      --quote-border: #3b82f6;
+      --quote-text: #1e3a8a;
+      --accent: #0d9488;
+    }
+    html[data-theme="sage"] {
+      --bg-main: #f2f9f5;
+      --card-bg: #ffffff;
+      --border-color: #d1fae5;
+      --text-main: #064e3b;
+      --text-sub: #335c4d;
+      --quote-bg: #ecfdf5;
+      --quote-border: #10b981;
+      --quote-text: #065f46;
+      --accent: #059669;
+    }
+    html[data-theme="warm"] {
+      --bg-main: #fbf7ee;
+      --card-bg: #ffffff;
+      --border-color: #fde68a;
+      --text-main: #451a03;
+      --text-sub: #694b37;
+      --quote-bg: #fefce8;
+      --quote-border: #f59e0b;
+      --quote-text: #78350f;
+      --accent: #d97706;
+    }
+
+    .theme-bg { background-color: var(--bg-main); }
+    .theme-card { background-color: var(--card-bg); border-color: var(--border-color); }
+    .theme-text-main { color: var(--text-main); }
+    .theme-text-sub { color: var(--text-sub); }
+    .theme-quote { 
+      background-color: var(--quote-bg); 
+      border-color: var(--quote-border); 
+      color: var(--quote-text); 
+    }
+
+    .screen-section {
+      min-height: calc(100vh - 4.5rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 5.5rem;
+      padding-bottom: 3.5rem;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="theme-bg theme-text-main antialiased selection:bg-teal-500 selection:text-white">
+
+  <!-- Floating Toast Notification -->
+  <div id="toast-notify" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none max-w-sm">
+    <div id="toast-box" class="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700">
+      <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+      <div id="toast-msg" class="text-xs font-medium font-sarabun">ข้อความแจ้งเตือน</div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       HEADER & TOP NAVBAR
+       ========================================== -->
+  <header class="fixed top-2 left-1/2 -translate-x-1/2 z-50 bg-white/95 backdrop-blur-md px-3 sm:px-5 py-2 rounded-2xl sm:rounded-full border border-slate-300 shadow-lg flex flex-wrap items-center justify-between gap-2.5 max-w-6xl w-[96%]">
+    
+    <!-- Logo & Title -->
+    <div class="flex items-center gap-2">
+      <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+      <div class="flex flex-col">
+        <span class="text-xs font-black tracking-tight text-slate-900 leading-none">ศธจ.เชียงใหม่</span>
+        <span class="text-[10px] font-bold text-teal-700 tracking-wider">LEARN TO EARN</span>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-medium">
+      <button type="button" onclick="switchMainTab('pitch')" id="tab-btn-pitch" class="main-tab-btn px-3 py-1 rounded-lg bg-teal-600 text-white font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+        <i class="fa-solid fa-person-chalkboard"></i>
+        <span>การนำเสนอ 5 นาที</span>
+      </button>
+      <button type="button" onclick="switchMainTab('explorer')" id="tab-btn-explorer" class="main-tab-btn px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer">
+        <i class="fa-solid fa-magnifying-glass-chart"></i>
+        <span>สืบค้นโครงการ (<span id="tab-proj-count">23</span>)</span>
+      </button>
+      <button type="button" onclick="switchMainTab('discussion')" id="tab-btn-discussion" class="main-tab-btn px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer">
+        <i class="fa-solid fa-comments"></i>
+        <span>3 คำถามยุทธศาสตร์</span>
+      </button>
+    </div>
+
+    <!-- Accessibility & Tools -->
+    <div class="flex items-center gap-2">
+      <!-- Data Status Indicator -->
+      <button type="button" onclick="refreshData()" id="sync-btn" title="สถานะข้อมูล: คลิกเพื่อรีเฟรชจาก Google Sheets" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold hover:bg-emerald-100 transition cursor-pointer">
+        <i class="fa-solid fa-cloud-arrow-down" id="sync-icon"></i>
+        <span id="sync-label">Sheets สด</span>
+      </button>
+
+      <!-- Theme Switcher -->
+      <div class="hidden sm:flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+        <button type="button" onclick="setAppTheme('ocean')" id="btn-theme-ocean" title="ธีมครามฟ้า" class="w-5 h-5 rounded-md bg-sky-500 border-2 border-white shadow-xs cursor-pointer transition"></button>
+        <button type="button" onclick="setAppTheme('sage')" id="btn-theme-sage" title="ธีมเขียวธรรมชาติ" class="w-5 h-5 rounded-md bg-emerald-500 border-2 border-transparent shadow-xs cursor-pointer transition ml-1"></button>
+        <button type="button" onclick="setAppTheme('warm')" id="btn-theme-warm" title="ธีมอบอุ่นนวลตา" class="w-5 h-5 rounded-md bg-amber-500 border-2 border-transparent shadow-xs cursor-pointer transition ml-1"></button>
+      </div>
+
+      <!-- Font Resizer -->
+      <div class="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-[11px] font-bold text-slate-600">
+        <button type="button" onclick="setFontSize('sm')" id="font-sm" class="px-1.5 py-0.5 rounded hover:text-slate-900 transition">ก-</button>
+        <button type="button" onclick="setFontSize('base')" id="font-base" class="px-1.5 py-0.5 rounded bg-white text-teal-700 shadow-xs transition">ก</button>
+        <button type="button" onclick="setFontSize('lg')" id="font-lg" class="px-1.5 py-0.5 rounded hover:text-slate-900 transition">ก+</button>
+      </div>
+
+      <!-- Fullscreen -->
+      <button type="button" onclick="toggleFullScreen()" title="เต็มจอ (F)" class="p-1.5 text-slate-500 hover:text-teal-700 transition">
+        <i class="fa-solid fa-expand"></i>
+      </button>
+    </div>
+
+  </header>
+
+
+  <!-- =========================================================
+       SECTION 1: PITCH MODE (3 จังหวะนำเสนอเชิงกลยุทธ์)
+       ========================================================= -->
+  <div id="view-pitch" class="w-full">
+    
+    <!-- Sub-Nav for Pitch Screens -->
+    <div class="fixed top-16 left-1/2 -translate-x-1/2 z-40 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full border border-slate-200 shadow-sm flex items-center gap-1.5 text-xs">
+      <button type="button" onclick="goToSlide(0)" id="dot-0" class="step-btn px-3 py-0.5 rounded-full bg-teal-600 text-white font-bold transition">1. ห่วงโซ่คุณค่า</button>
+      <button type="button" onclick="goToSlide(1)" id="dot-1" class="step-btn px-3 py-0.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition">2. พื้นที่ & สาขา</button>
+      <button type="button" onclick="goToSlide(2)" id="dot-2" class="step-btn px-3 py-0.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition">3. ปลายน้ำ & รายได้</button>
+      <div class="h-3 w-px bg-slate-300 mx-1"></div>
+      <button type="button" onclick="prevSlide()" class="p-1 text-slate-500 hover:text-teal-700"><i class="fa-solid fa-chevron-left"></i></button>
+      <span id="slide-num" class="font-mono text-slate-700 font-bold px-0.5">1/3</span>
+      <button type="button" onclick="nextSlide()" class="p-1 text-slate-500 hover:text-teal-700"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <!-- SCREEN 1: VALUE CHAIN GAP -->
+    <section id="screen-0" class="screen-section px-4 sm:px-8 lg:px-16 border-b theme-card">
+      <div class="max-w-7xl mx-auto w-full">
+        
+        <div class="mb-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-xs font-bold mb-2 border border-teal-200">
+            <i class="fa-solid fa-stopwatch"></i> นาทีที่ 1 - 2 : ภาพรวมยุทธศาสตร์ 7 กลยุทธ์
+          </div>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight theme-text-main">
+            "กลางน้ำบวม ปลายน้ำหาย"
+          </h2>
+          <p class="theme-text-sub text-sm sm:text-base mt-2 max-w-3xl">
+            ภาพสะท้อนจาก 23 โครงการที่รายงานเข้าระบบจริง: ภาคีเครือข่ายเน้นการจัดฝึกอบรมทักษะระยะสั้น แต่ห่วงโซ่ปลายน้ำด้าน Credit Bank และการรับรองสมรรถนะยังไม่ปรากฏในระบบภาพรวม
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          
+          <!-- กราฟ Chart 1 -->
+          <div class="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+              <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                <i class="fa-solid fa-chart-column text-teal-600"></i> จำนวนโครงการที่รายงานจำแนกตาม 7 กลยุทธ์
+              </h3>
+              <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">รวม 23 โครงการ</span>
+            </div>
+            <div class="h-64 sm:h-72 w-full relative">
+              <canvas id="chainChart"></canvas>
+            </div>
+          </div>
+
+          <!-- ฝั่งข้อความและปุ่มสั่งการ -->
+          <div class="lg:col-span-5 space-y-4">
+            
+            <div class="grid grid-cols-3 gap-3">
+              <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl text-center shadow-xs">
+                <span class="text-[11px] text-amber-800 font-bold uppercase">ต้นน้ำ</span>
+                <div class="text-2xl font-black text-amber-600 mt-1">10-21</div>
+                <div class="text-[10px] text-amber-800/80 mt-0.5">แนะแนว/หลักสูตร</div>
+              </div>
+              <div class="bg-teal-50 border border-teal-200 p-3.5 rounded-2xl text-center shadow-xs">
+                <span class="text-[11px] text-teal-800 font-bold uppercase">กลางน้ำ (บวม)</span>
+                <div class="text-2xl font-black text-teal-600 mt-1">15-18</div>
+                <div class="text-[10px] text-teal-800/80 mt-0.5">ฝึกอบรม/ทวิภาคี</div>
+              </div>
+              <div class="bg-rose-50 border border-rose-200 p-3.5 rounded-2xl text-center shadow-xs">
+                <span class="text-[11px] text-rose-800 font-bold uppercase">ปลายน้ำ (หาย)</span>
+                <div class="text-2xl font-black text-rose-600 mt-1">0 *</div>
+                <div class="text-[10px] text-rose-800/80 mt-0.5">Credit Bank ในระบบ</div>
+              </div>
+            </div>
+
+            <div class="bg-amber-50/70 border-l-4 border-amber-500 p-3.5 rounded-r-2xl text-xs text-slate-700 leading-relaxed">
+              <div class="font-bold text-amber-900 flex items-center gap-1.5 mb-0.5">
+                <i class="fa-solid fa-circle-info"></i> * หมายเหตุสำคัญเชิงพื้นที่:
+              </div>
+              <p>กลยุทธ์ 3.5 Credit Bank ในระบบรายงานโครงการเป็น <strong>0</strong> แต่ข้อมูลจริงในพื้นที่มีการขับเคลื่อนแล้วถึง <strong>37 โปรแกรม ใน 16 อำเภอ (49 คู่ความร่วมมือ)</strong></p>
+            </div>
+
+            <div class="theme-quote border-l-4 p-4 rounded-2xl shadow-xs">
+              <div class="text-[11px] font-bold flex items-center gap-1.5 mb-1.5 uppercase tracking-wider opacity-90">
+                <i class="fa-solid fa-microphone-lines"></i> Key Message ของ ศน.
+              </div>
+              <blockquote class="text-sm font-medium italic leading-relaxed font-sarabun">
+                "เชียงใหม่เรามีพลังในการจัดอบรมและสร้างทักษะ (กลางน้ำ) มหาศาลครับ แต่ต้นน้ำด้านหลักสูตรยังกระจาย และปลายน้ำคือ Credit Bank กับการรับรองสมรรถนะยังไม่สะท้อนในระบบภาพรวมเลย"
+              </blockquote>
+            </div>
+
+            <button type="button" onclick="goToSlide(1)" class="w-full py-3.5 bg-teal-600 hover:bg-teal-700 active:scale-[0.98] text-white text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition shadow-md cursor-pointer">
+              <span>ไปต่อ: สำรวจช่องว่างเชิงพื้นที่ (Screen 2)</span>
+              <i class="fa-solid fa-arrow-down"></i>
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SCREEN 2: SPATIAL & SECTOR GAP -->
+    <section id="screen-1" class="screen-section px-4 sm:px-8 lg:px-16 border-b theme-card">
+      <div class="max-w-7xl mx-auto w-full">
+        
+        <div class="mb-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 text-xs font-bold mb-2 border border-indigo-200">
+            <i class="fa-solid fa-stopwatch"></i> นาทีที่ 2 - 3.5 : ความครอบคลุมเชิงพื้นที่และกลุ่มอาชีพ
+          </div>
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight theme-text-main">
+            "เมืองกระจุก อำเภอรอบนอกกระจาย"
+          </h2>
+          <p class="theme-text-sub text-sm sm:text-base mt-2 max-w-3xl">
+            ความเหลื่อมล้ำของการเข้าถึงโครงการ Learn to Earn: ทรัพยากรลงในเขตเมืองหนาแน่น และกลุ่มอาชีพยังพึ่งพาสายบริการแบบดั้งเดิมมากกว่าเศรษฐกิจเป้าหมายใหม่
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <div class="lg:col-span-6 bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
+                <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                  <i class="fa-solid fa-map-location-dot text-indigo-600"></i> การกระจายตัวรายอำเภอ (Top Districts)
+                </h3>
+                <span class="text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">กระจุกเขตเมือง</span>
+              </div>
+              <div class="h-60 w-full relative">
+                <canvas id="districtChart"></canvas>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-2 italic">
+              * อำเภอเมือง (13 โครงการ) และแม่ริม (8 โครงการ) รองรับโครงการส่วนใหญ่ ขณะที่อำเภอห่างไกลยังมีโครงการน้อย
+            </p>
+          </div>
+
+          <div class="lg:col-span-6 bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
+                <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+                  <i class="fa-solid fa-utensils text-rose-500"></i> กลุ่มอาชีพเป้าหมายที่เปิดฝึกอบรม
+                </h3>
+                <span class="text-[11px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded">เน้นอาหาร/คหกรรม</span>
+              </div>
+              <div class="h-60 w-full relative">
+                <canvas id="sectorChart"></canvas>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-2 italic">
+              * อาหาร/เครื่องดื่ม ครองอันดับ 1 (8 โครงการ) ส่วนทักษะดิจิทัลหรือเศรษฐกิจเป้าหมายใหม่ยังพัฒนาได้อีกมาก
+            </p>
+          </div>
+
+          <div class="lg:col-span-12 theme-quote border-l-4 p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
+            <div class="space-y-1">
+              <div class="text-[11px] font-bold flex items-center gap-1.5 uppercase tracking-wider opacity-90">
+                <i class="fa-solid fa-microphone-lines"></i> Key Message ของ ศน.
+              </div>
+              <blockquote class="text-sm font-medium italic leading-relaxed font-sarabun">
+                "โอกาสในการ Learn to Earn ยังกระจุกตัวอยู่ในเขตเมืองและสายบริการดั้งเดิม โจทย์ของเราคือจะกระจายโอกาสสู่อำเภออื่น และเชื่อมโยงเศรษฐกิจเป้าหมายใหม่ของจังหวัดได้อย่างไร"
+              </blockquote>
+            </div>
+
+            <button type="button" onclick="goToSlide(2)" class="shrink-0 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-sm font-bold rounded-xl flex items-center gap-2 transition shadow-md cursor-pointer">
+              <span>ไปต่อ: ปมปัญหาผลลัพธ์ปลายน้ำ (Screen 3)</span>
+              <i class="fa-solid fa-arrow-down"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SCREEN 3: THE ULTIMATE OUTCOME GAP & QR BRIDGE -->
+    <section id="screen-2" class="screen-section px-4 sm:px-8 lg:px-16 theme-card">
+      <div class="max-w-7xl mx-auto w-full">
+        
+        <div class="mb-5 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-bold mb-2 border border-rose-200">
+              <i class="fa-solid fa-stopwatch"></i> นาทีที่ 3.5 - 5 : ปมปัญหาใหญ่ & ชวนคุย
+            </div>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight theme-text-main">
+              "รู้ว่ามีคนเรียน แต่ไม่รู้ว่ามีเงินจริงไหม"
+            </h2>
+            <p class="theme-text-sub text-sm sm:text-base mt-2 max-w-2xl">
+              อัตราการสูญหายของข้อมูลผลลัพธ์ปลายทาง (Outcome Attrition): จากผู้ผ่านการอบรมสองหมื่นคน สู่กลุ่มที่ยืนยันการนำไปใช้จริงเพียงพันกว่าคน
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="switchMainTab('discussion')" class="text-xs font-bold text-teal-700 hover:text-teal-900 px-4 py-2 rounded-xl border border-teal-300 bg-teal-50 shadow-xs cursor-pointer flex items-center gap-1.5">
+              <i class="fa-solid fa-comments"></i> เปิด 3 คำถามยุทธศาสตร์
+            </button>
+            <button type="button" onclick="goToSlide(0)" class="text-xs font-semibold text-slate-600 hover:text-slate-900 px-3 py-2 rounded-xl border border-slate-300 bg-white shadow-xs cursor-pointer">
+              <i class="fa-solid fa-arrow-rotate-left mr-1"></i> เริ่มต้นใหม่
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          
+          <div class="lg:col-span-7 space-y-4">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              <div class="bg-white border border-slate-200 p-4 rounded-3xl shadow-xs">
+                <span class="text-xs text-slate-500 font-semibold">1. ผู้ผ่านกิจกรรม</span>
+                <div class="text-3xl sm:text-4xl font-extrabold text-teal-600 mt-1">21,219</div>
+                <div class="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
+                  <i class="fa-solid fa-user-check text-teal-600"></i> จาก 21 โครงการ
+                </div>
+              </div>
+
+              <div class="bg-white border border-slate-200 p-4 rounded-3xl shadow-xs">
+                <span class="text-xs text-slate-500 font-semibold">2. ผู้ติดตามผลได้</span>
+                <div class="text-3xl sm:text-4xl font-extrabold text-amber-600 mt-1">8,601</div>
+                <div class="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
+                  <i class="fa-solid fa-magnifying-glass text-amber-600"></i> ติดตามได้ ~40.5%
+                </div>
+              </div>
+
+              <div class="bg-rose-50 border border-rose-300 p-4 rounded-3xl shadow-xs">
+                <span class="text-xs text-rose-800 font-bold">3. นำทักษะไปใช้จริง</span>
+                <div class="text-3xl sm:text-4xl font-extrabold text-rose-600 mt-1">1,140</div>
+                <div class="text-[11px] text-rose-700 font-semibold mt-1 flex items-center gap-1">
+                  <i class="fa-solid fa-triangle-exclamation"></i> รายงานเพียง 5 โครงการ!
+                </div>
+              </div>
+            </div>
+
+            <!-- ช่องว่างผลลัพธ์ -->
+            <div class="bg-white border border-slate-200 p-4 sm:p-5 rounded-3xl space-y-2.5 shadow-xs">
+              <div class="flex justify-between text-xs font-bold text-slate-700">
+                <span>ช่องว่างข้อมูลการมีงานทำและรายได้จริง</span>
+                <span class="text-rose-600 font-extrabold">ข้อมูลว่างเปล่าเกือบ 100%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-3.5 rounded-full overflow-hidden flex border border-slate-200">
+                <div class="bg-teal-500 h-full" style="width: 5.3%" title="นำไปใช้จริง 1,140 คน (~5.3%)"></div>
+                <div class="bg-rose-400 h-full flex-1" title="ขาดข้อมูลรายได้และการมีงานทำ"></div>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-500 font-medium">
+                <span>🟢 ยืนยันใช้ทักษะ (5.3%)</span>
+                <span>🔴 ช่องว่างที่ไม่มีข้อมูลรายได้จริง (~94.7%)</span>
+              </div>
+            </div>
+
+            <div class="theme-quote border-l-4 p-4 rounded-2xl shadow-xs">
+              <div class="text-[11px] font-bold flex items-center gap-1.5 mb-1 uppercase tracking-wider opacity-90">
+                <i class="fa-solid fa-bullhorn"></i> Key Message ศน. ชี้เป้าเพื่อเปิดวงคุย
+              </div>
+              <blockquote class="text-sm font-medium italic leading-relaxed font-sarabun">
+                "นี่คือโจทย์ใหญ่ของบ่ายนี้ครับ เรามีคนผ่านการอบรมเป็นหมื่น แต่เรายังตอบไม่ได้เต็มปากว่าเด็กมีรายได้เพิ่มขึ้นจริงเท่าไร ใน 45 นาทีถัดไป เราจะมาช่วยกันตอบ 3 คำถามสำคัญเพื่อขับเคลื่อนเครือข่ายร่วมกันครับ"
+              </blockquote>
+            </div>
+
+          </div>
+
+          <!-- QR Code Bridge -->
+          <div class="lg:col-span-5">
+            <div class="bg-white border-2 border-teal-500/60 p-6 rounded-3xl shadow-xl text-center relative overflow-hidden">
+              
+              <span class="inline-block px-3 py-1 bg-teal-100 text-teal-800 border border-teal-300 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
+                Live Workshop Bridge
+              </span>
+
+              <h3 class="text-xl font-extrabold text-slate-900 mb-1">
+                สแกนร่วมตอบ 3 คำถามยุทธศาสตร์
+              </h3>
+              <p class="text-xs text-slate-500 mb-4">
+                ร่วมระดมความคิดเห็นและข้อเสนอแนะสู่ Google Sheets กลางทันที
+              </p>
+
+              <div class="bg-white p-3.5 rounded-2xl inline-block shadow-md border-2 border-slate-200">
+                <img 
+                  id="qr-img" 
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2F1NEL-jetzI51Ok8JkfiGHXVqWAxT5N0jefWPBWgPmff0%2Fedit" 
+                  alt="QR Code สำหรับเข้าร่วมประชุม" 
+                  class="w-40 h-40 sm:w-44 sm:h-44 object-contain rounded-lg"
+                >
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-100">
+                <div class="flex items-center justify-center gap-1.5 text-xs text-slate-600 mb-2 font-medium">
+                  <i class="fa-solid fa-link text-teal-600"></i> ลิงก์ปลายทาง:
+                </div>
+                <div class="flex items-center gap-2 max-w-xs mx-auto">
+                  <input 
+                    type="text" 
+                    id="qr-input" 
+                    value="https://docs.google.com/spreadsheets/d/1NEL-jetzI51Ok8JkfiGHXVqWAxT5N0jefWPBWgPmff0/edit" 
+                    class="bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-xl px-3 py-1.5 w-full focus:outline-none focus:ring-2 focus:ring-teal-500 font-mono text-[11px]"
+                  >
+                  <button 
+                    type="button"
+                    onclick="updateQrCode()" 
+                    class="bg-teal-600 hover:bg-teal-700 text-white text-xs px-3 py-1.5 rounded-xl shrink-0 font-bold transition shadow-xs cursor-pointer"
+                  >
+                    อัปเดต
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+
+  <!-- =========================================================
+       SECTION 2: PROJECT EXPLORER (สืบค้นและคัดกรองโครงการ)
+       ========================================================= -->
+  <div id="view-explorer" class="w-full hidden pt-20 pb-16 px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto">
+    
+    <!-- Title & Export -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-xs font-bold mb-2 border border-teal-200">
+          <i class="fa-solid fa-database"></i> ฐานข้อมูลโครงการ Learn to Earn จังหวัดเชียงใหม่
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          สืบค้นและวิเคราะห์รายโครงการ
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+          กรองตามพื้นที่ กลุ่มอาชีพ สังกัดหน่วยงาน และรูปแบบการพัฒนาทักษะ (เชื่อมต่อ Google Sheets สด)
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="exportFilteredCSV()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-xs transition cursor-pointer">
+          <i class="fa-solid fa-file-excel"></i>
+          <span>ส่งออก CSV</span>
+        </button>
+        <button type="button" onclick="resetFilters()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-300 transition cursor-pointer">
+          <i class="fa-solid fa-rotate-left mr-1"></i> ล้างตัวกรอง
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter Dashboard Card -->
+    <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm mb-6">
+      
+      <!-- Search Input -->
+      <div class="relative mb-4">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input 
+          type="text" 
+          id="filter-search" 
+          oninput="applyProjectFilters()" 
+          placeholder="ค้นหาชื่อโครงการ, รหัสโครงการ (L2E-...), หน่วยงาน, กลุ่มอาชีพ, ผลลัพธ์..." 
+          class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition"
+        >
+      </div>
+
+      <!-- Dropdown Filters Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        
+        <!-- Filter District -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">
+            <i class="fa-solid fa-map-pin text-teal-600 mr-1"></i> อำเภอที่ดำเนินการ
+          </label>
+          <select id="filter-district" onchange="applyProjectFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <option value="">ทั้งหมด (ทุกอำเภอ)</option>
+          </select>
+        </div>
+
+        <!-- Filter Sector -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">
+            <i class="fa-solid fa-briefcase text-indigo-600 mr-1"></i> กลุ่มอาชีพเป้าหมาย
+          </label>
+          <select id="filter-sector" onchange="applyProjectFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <option value="">ทั้งหมด (ทุกกลุ่มอาชีพ)</option>
+          </select>
+        </div>
+
+        <!-- Filter Ministry / Affiliation -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">
+            <i class="fa-solid fa-building-columns text-amber-600 mr-1"></i> สังกัด / กระทรวง
+          </label>
+          <select id="filter-agency" onchange="applyProjectFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <option value="">ทั้งหมด (ทุกสังกัด)</option>
+          </select>
+        </div>
+
+        <!-- Filter Learning Type -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">
+            <i class="fa-solid fa-graduation-cap text-rose-600 mr-1"></i> รูปแบบการเรียนรู้
+          </label>
+          <select id="filter-learning" onchange="applyProjectFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <option value="">ทั้งหมด (ทุกรูปแบบ)</option>
+          </select>
+        </div>
+
+        <!-- Filter Status & BP -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">
+            <i class="fa-solid fa-star text-amber-500 mr-1"></i> สถานะ / นวัตกรรม
+          </label>
+          <select id="filter-status" onchange="applyProjectFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <option value="">ทุกสถานะ</option>
+            <option value="bp">เฉพาะ Best Practice (BP)</option>
+            <option value="เผยแพร่">เผยแพร่แล้ว</option>
+            <option value="ไม่เผยแพร่">ยังไม่เผยแพร่</option>
+          </select>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Filter KPI Summary Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
+      <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-2xs">
+        <span class="text-[11px] font-bold text-slate-500">โครงการที่พบ</span>
+        <div id="stat-proj-count" class="text-xl font-extrabold text-teal-700 mt-0.5">23</div>
+        <span class="text-[10px] text-slate-400">จากทั้งหมด 23 โครงการ</span>
+      </div>
+
+      <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-2xs">
+        <span class="text-[11px] font-bold text-slate-500">งบประมาณรวม</span>
+        <div id="stat-budget" class="text-xl font-extrabold text-indigo-700 mt-0.5">8.82 M</div>
+        <span class="text-[10px] text-slate-400">บาท (ที่รายงานงบ)</span>
+      </div>
+
+      <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-2xs">
+        <span class="text-[11px] font-bold text-slate-500">ผู้เข้าร่วมจริง</span>
+        <div id="stat-participants" class="text-xl font-extrabold text-amber-600 mt-0.5">12,302</div>
+        <span class="text-[10px] text-slate-400">คน</span>
+      </div>
+
+      <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-2xs">
+        <span class="text-[11px] font-bold text-slate-500">ผู้ผ่านกิจกรรม</span>
+        <div id="stat-passed" class="text-xl font-extrabold text-emerald-600 mt-0.5">21,219</div>
+        <span class="text-[10px] text-slate-400">คน</span>
+      </div>
+
+      <div class="bg-white border border-slate-200 p-3.5 rounded-2xl shadow-2xs">
+        <span class="text-[11px] font-bold text-slate-500">ผู้ติดตามผลได้</span>
+        <div id="stat-tracked" class="text-xl font-extrabold text-sky-600 mt-0.5">8,601</div>
+        <span class="text-[10px] text-slate-400">คน</span>
+      </div>
+
+      <div class="bg-rose-50 border border-rose-200 p-3.5 rounded-2xl shadow-2xs">
+        <span class="text-[11px] font-bold text-rose-800">นำไปใช้จริง</span>
+        <div id="stat-used" class="text-xl font-extrabold text-rose-600 mt-0.5">1,140</div>
+        <span class="text-[10px] text-rose-700 font-semibold">ยืนยันผลลัพธ์</span>
+      </div>
+    </div>
+
+    <!-- Projects Table Container -->
+    <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 uppercase text-[11px] tracking-wider">
+            <tr>
+              <th class="py-3 px-4">รหัส</th>
+              <th class="py-3 px-4">ชื่อโครงการ</th>
+              <th class="py-3 px-4">หน่วยงาน / สังกัด</th>
+              <th class="py-3 px-4">พื้นที่ดำเนินการ</th>
+              <th class="py-3 px-4">กลุ่มอาชีพ</th>
+              <th class="py-3 px-4 text-center">ผู้ผ่าน</th>
+              <th class="py-3 px-4 text-right">งบประมาณ</th>
+              <th class="py-3 px-4 text-center">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="projects-table-body" class="divide-y divide-slate-100 font-sarabun">
+            <!-- Dynamic Rows will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="hidden py-12 text-center text-slate-400">
+        <i class="fa-solid fa-folder-open text-4xl mb-3"></i>
+        <p class="text-sm font-semibold">ไม่พบโครงการที่ตรงกับเงื่อนไขการค้นหา</p>
+        <button type="button" onclick="resetFilters()" class="mt-2 text-xs text-teal-600 hover:underline">ล้างตัวกรองทั้งหมด</button>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       SECTION 3: 3 STRATEGIC QUESTIONS (3 คำถามชวนคุยยุทธศาสตร์)
+       ========================================================= -->
+  <div id="view-discussion" class="w-full hidden pt-20 pb-16 px-4 sm:px-8 lg:px-12 max-w-5xl mx-auto">
+    
+    <!-- Title & Action Bar -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-xs font-bold mb-2 border border-teal-200">
+          <i class="fa-solid fa-comments"></i> วาระการขับเคลื่อนเชิงยุทธศาสตร์ Learn to Earn จังหวัดเชียงใหม่
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          3 คำถามชวนคุยยุทธศาสตร์
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+          เปิดวงระดมความคิดเห็นแบบ Win-Win และบันทึกคำตอบตรงสู่ Google Sheets
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <button type="button" onclick="saveDiscussionToGoogleSheet()" id="btn-save-sheet" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-md transition cursor-pointer">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span>บันทึกคำตอบลง Google Sheets</span>
+        </button>
+        <a href="https://docs.google.com/spreadsheets/d/1NEL-jetzI51Ok8JkfiGHXVqWAxT5N0jefWPBWgPmff0/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-300 transition flex items-center gap-1">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>เปิดดู Sheet คำตอบ</span>
+        </a>
+        <button type="button" onclick="copyDiscussionMinutes()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-300 transition cursor-pointer" title="คัดลอกข้อความ">
+          <i class="fa-solid fa-copy"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Respondent Profile Bar (ตำแหน่ง & หน่วยงาน เป็น Dropdown) -->
+    <div class="bg-white border border-slate-200 p-5 rounded-3xl mb-6 shadow-xs">
+      <div class="text-xs font-bold text-slate-800 mb-3 flex items-center gap-2">
+        <i class="fa-solid fa-id-card text-teal-600"></i>
+        <span>ข้อมูลผู้ตอบ / ผู้แทน</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        
+        <!-- Dropdown 1: ตำแหน่ง -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">
+            <i class="fa-solid fa-user-tie text-teal-600 mr-1"></i> ตำแหน่ง
+          </label>
+          <select 
+            id="resp-position" 
+            onchange="handlePositionChange()" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+          >
+            <option value="">-- เลือกตำแหน่งของท่าน --</option>
+            <option value="ผู้บริหารระดับจังหวัด / ภูมิภาค">ผู้บริหารระดับจังหวัด / ภูมิภาค</option>
+            <option value="ผู้บริหารองค์กรปกครองส่วนท้องถิ่น">ผู้บริหารองค์กรปกครองส่วนท้องถิ่น</option>
+            <option value="ผู้บริหารมหาวิทยาลัย / สถาบันอุดมศึกษา">ผู้บริหารมหาวิทยาลัย / สถาบันอุดมศึกษา</option>
+            <option value="ผู้บริหารสถานศึกษา (โรงเรียน / อาชีวะ / เอกชน)">ผู้บริหารสถานศึกษา (โรงเรียน / อาชีวะ / เอกชน)</option>
+            <option value="ผู้บริหารสำนักงานเขตพื้นที่การศึกษา">ผู้บริหารสำนักงานเขตพื้นที่การศึกษา</option>
+            <option value="คณะกรรมการ / อนุกรรมการ">คณะกรรมการ / อนุกรรมการ</option>
+            <option value="ภาคเอกชน / ธุรกิจ">ภาคเอกชน / ธุรกิจ</option>
+            <option value="ภาคประชาสังคม / เยาวชน / ผู้ทรงคุณวุฒิ">ภาคประชาสังคม / เยาวชน / ผู้ทรงคุณวุฒิ</option>
+            <option value="นักเรียน นักศึกษา">นักเรียน นักศึกษา</option>
+            <option value="อื่นๆ">อื่นๆ โปรดระบุ</option>
+          </select>
+          <input 
+            type="text" 
+            id="resp-position-other" 
+            placeholder="โปรดระบุตำแหน่งของท่าน..." 
+            class="hidden mt-2 w-full bg-slate-50 border border-teal-300 rounded-xl px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
+          >
+        </div>
+
+        <!-- Dropdown 2: หน่วยงาน / สถาบัน / สถานศึกษา -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">
+            <i class="fa-solid fa-building-columns text-indigo-600 mr-1"></i> หน่วยงาน / สถาบัน / สถานศึกษา
+          </label>
+          <select 
+            id="resp-agency" 
+            onchange="handleAgencyChange()" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white"
+          >
+            <option value="">-- เลือกประเภทหน่วยงาน / สถาบัน --</option>
+            <option value="หน่วยงานราชการจังหวัด / ภูมิภาค">หน่วยงานราชการจังหวัด / ภูมิภาค</option>
+            <option value="องค์กรปกครองส่วนท้องถิ่น">องค์กรปกครองส่วนท้องถิ่น</option>
+            <option value="มหาวิทยาลัย / สถาบันอุดมศึกษา">มหาวิทยาลัย / สถาบันอุดมศึกษา</option>
+            <option value="สำนักงานเขตพื้นที่การศึกษา">สำนักงานเขตพื้นที่การศึกษา</option>
+            <option value="สถานศึกษาอาชีวะ">สถานศึกษาอาชีวะ</option>
+            <option value="โรงเรียนสังกัด สพฐ. / ท้องถิ่น / เอกชน / พิเศษ">โรงเรียนสังกัด สพฐ. / ท้องถิ่น / เอกชน / พิเศษ</option>
+            <option value="หน่วยงานสนับสนุนการศึกษา">หน่วยงานสนับสนุนการศึกษา</option>
+            <option value="ภาคเอกชน / ธุรกิจ">ภาคเอกชน / ธุรกิจ</option>
+            <option value="เครือข่าย / คณะทำงาน">เครือข่าย / คณะทำงาน</option>
+            <option value="อื่นๆ">อื่นๆ โปรดระบุ</option>
+          </select>
+          <input 
+            type="text" 
+            id="resp-agency-other" 
+            placeholder="โปรดระบุชื่อหน่วยงาน/สถาบันของท่าน..." 
+            class="hidden mt-2 w-full bg-slate-50 border border-teal-300 rounded-xl px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
+          >
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 3 Strategic Questions Cards -->
+    <div class="space-y-6">
+      
+      <!-- QUESTION 1 -->
+      <div class="bg-white border-2 border-teal-500/30 rounded-3xl p-6 shadow-sm relative overflow-hidden">
+        <div class="flex items-start justify-between gap-4 mb-3">
+          <div class="flex items-center gap-3">
+            <span class="w-9 h-9 rounded-2xl bg-teal-600 text-white font-black text-base flex items-center justify-center shrink-0 shadow-xs">1</span>
+            <div>
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-[10px] font-bold uppercase tracking-wider mb-1">
+                ปิดช่องว่างข้อมูล & ติดตามผล (Data & Outcome Tracking Gap)
+              </span>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                “จากประสบการณ์ของท่าน อะไรคือวิธีที่ง่ายและเป็นไปได้จริงที่สุด ในการติดตามว่าผู้เรียน/ผู้ผ่านการอบรม ‘มีรายได้หรือได้ใช้ทักษะจริง’?”
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-teal-50/80 border-l-4 border-teal-500 p-3.5 rounded-r-2xl text-xs text-teal-950 mb-4 font-sarabun">
+          <strong>💡 จุดเด่น:</strong> ไม่ถามว่าทำไมยังไม่มีข้อมูล แต่ถามหา <em>“วิธีที่ทำได้จริงและไม่สร้างภาระครู”</em> ทุกภาคีตอบได้ตามมุมมองของตน (เช่น ใช้ไลน์กลุ่ม, เชื่อมโยงข้อมูลประกันสังคม/แรงงาน, หรือให้สถานประกอบการช่วยรายงาน)
+        </div>
+
+        <!-- Quick Tags -->
+        <div class="flex flex-wrap items-center gap-1.5 mb-2.5">
+          <span class="text-[11px] font-bold text-slate-500">คลิกเติมแนวทาง:</span>
+          <button type="button" onclick="appendTagToField('resp-q1', '• ใช้ LINE Official Account / LINE กลุ่ม ติดตามสั้นๆ 30-90 วัน\n')" class="text-[11px] bg-slate-100 hover:bg-teal-100 hover:text-teal-800 px-2 py-0.5 rounded-lg border border-slate-200 transition cursor-pointer">+ LINE OA / กลุ่ม</button>
+          <button type="button" onclick="appendTagToField('resp-q1', '• เชื่อมโยงฐานข้อมูลประกันสังคม/แรงงานเพื่อดูสถานะการมีงานทำ\n')" class="text-[11px] bg-slate-100 hover:bg-teal-100 hover:text-teal-800 px-2 py-0.5 rounded-lg border border-slate-200 transition cursor-pointer">+ เชื่อมข้อมูลประกันสังคม</button>
+          <button type="button" onclick="appendTagToField('resp-q1', '• ให้สถานประกอบการ/ผู้จ้างงาน ช่วยยืนยันการรับเข้าทำงาน\n')" class="text-[11px] bg-slate-100 hover:bg-teal-100 hover:text-teal-800 px-2 py-0.5 rounded-lg border border-slate-200 transition cursor-pointer">+ สถานประกอบการรายงาน</button>
+          <button type="button" onclick="appendTagToField('resp-q1', '• ใช้ Digital Skill Badge / Portfolio แสดงผลงานสร้างรายได้\n')" class="text-[11px] bg-slate-100 hover:bg-teal-100 hover:text-teal-800 px-2 py-0.5 rounded-lg border border-slate-200 transition cursor-pointer">+ Digital Badge</button>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">ข้อเสนอแนะ / วิธีการที่ท่านเห็นว่าเป็นไปได้จริง:</label>
+          <textarea 
+            id="resp-q1" 
+            rows="3" 
+            placeholder="พิมพ์ความคิดเห็นหรือแนวทางที่ทำได้จริงและไม่สร้างภาระครู..." 
+            class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs text-slate-800 font-sarabun focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition leading-relaxed"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- QUESTION 2 -->
+      <div class="bg-white border-2 border-indigo-500/30 rounded-3xl p-6 shadow-sm relative overflow-hidden">
+        <div class="flex items-start justify-between gap-4 mb-3">
+          <div class="flex items-center gap-3">
+            <span class="w-9 h-9 rounded-2xl bg-indigo-600 text-white font-black text-base flex items-center justify-center shrink-0 shadow-xs">2</span>
+            <div>
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-800 text-[10px] font-bold uppercase tracking-wider mb-1">
+                ปิดช่องว่างการกระจายตัว & หลักสูตรพื้นที่ (Spatial & Localized Curriculum Gap)
+              </span>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                “หากจะให้การเรียนรู้เพื่อสร้างรายได้ตอบโจทย์พื้นที่เชียงใหม่อย่างแท้จริง หน่วยงานของท่านเห็นว่าควรเติมทักษะหรือสร้างความร่วมมือในเรื่องใดเพิ่มขึ้น?”
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-indigo-50/80 border-l-4 border-indigo-500 p-3.5 rounded-r-2xl text-xs text-indigo-950 mb-4 font-sarabun">
+          <strong>💡 จุดเด่น:</strong> เปิดโอกาสให้หน่วยงานสายอาชีพ แรงงาน หรือพื้นที่รอบนอก ได้สะท้อนศักยภาพของตนเองโดยตรง (เช่น ท่องเที่ยว/อาหารชาติพันธุ์, ดิจิทัล/ครีเอทีฟ, หรือเกษตรแปรรูป)
+        </div>
+
+        <!-- Quick Tags -->
+        <div class="flex flex-wrap items-center gap-1.5 mb-2.5">
+          <span class="text-[11px] font-bold text-slate-500">คลิกเติมสาขา/ทักษะ:</span>
+          <button type="button" onclick="appendTagToField('resp-q2', '• ท่องเที่ยวชุมชน / อาหารและวัฒนธรรมชาติพันธุ์ล้านนา\n')" class="text-[11px] bg-slate-100 hover:bg-indigo-100 hover:text-indigo-800 px-2 py-0.5 rounded-lg border border-slate-200 transition cursor-pointer">+ ท่องเที่ยว/อาหารชาติพันธุ์</button>
+          <button type="button" onclick="appendTagToField('resp-q2', '• ดิจิทัลคอนเทนต์ / E-Commerce / AI สำหรับธุรกิจท้องถิ่น\n')" class="text-[11px] bg-slate-100 hover:bg-indigo-100 hover:text-indigo-800 px-2 py-0.5 rounded-lg border border-slate-200 transition cursor-pointer">+ ดิจิทัล/ครีเอทีฟ</button>
+          <button type="button" onclick="appendTagToField('resp-q2', '• เกษตรแปรรูปมูลค่าสูง / บรรจุภัณฑ์และการตลาดออนไลน์\n')" class="text-[11px] bg-slate-100 hover:bg-indigo-100 hover:text-indigo-800 px-2 py-0.5 rounded-lg border border-slate-200 transition cursor-pointer">+ เกษตรแปรรูป</button>
+          <button type="button" onclick="appendTagToField('resp-q2', '• ช่างชุมชน / ช่างซ่อมบำรุง / พลังงานแสงอาทิตย์\n')" class="text-[11px] bg-slate-100 hover:bg-indigo-100 hover:text-indigo-800 px-2 py-0.5 rounded-lg border border-slate-200 transition cursor-pointer">+ ช่างชุมชน/พลังงาน</button>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">ทักษะ ความร่วมมือ หรืออำเภอเป้าหมายที่ควรเติมเต็ม:</label>
+          <textarea 
+            id="resp-q2" 
+            rows="3" 
+            placeholder="พิมพ์ทักษะที่ควรเติม หรือความร่วมมือในพื้นที่ที่ต้องการขยายผล..." 
+            class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs text-slate-800 font-sarabun focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition leading-relaxed"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- QUESTION 3 -->
+      <div class="bg-white border-2 border-amber-500/30 rounded-3xl p-6 shadow-sm relative overflow-hidden">
+        <div class="flex items-start justify-between gap-4 mb-3">
+          <div class="flex items-center gap-3">
+            <span class="w-9 h-9 rounded-2xl bg-amber-600 text-white font-black text-base flex items-center justify-center shrink-0 shadow-xs">3</span>
+            <div>
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-bold uppercase tracking-wider mb-1">
+                ปิดช่องว่างการเชื่อมต่อ & แชร์ทรัพยากร (Win-Win Resource Sharing)
+              </span>
+              <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                “ถ้าเราจะจับมือกันสร้าง ‘เครือข่าย Learn to Earn เชียงใหม่’ ให้เดินหน้าต่อได้จริง หน่วยงานของท่านพร้อมจะสนับสนุนอะไร และอยากให้เพื่อนภาคีช่วยหนุนเสริมในเรื่องใด?”
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-amber-50/80 border-l-4 border-amber-500 p-3.5 rounded-r-2xl text-xs text-amber-950 mb-4 font-sarabun">
+          <strong>💡 จุดเด่น:</strong> เป็นคำถามแบบ <em>Win-Win</em> ให้ทุกคนได้เสนอทั้งสิ่งที่ตนมี (Give) และสิ่งที่ตนต้องการ (Take) เช่น งบประมาณ / สถานที่ / ครู-วิทยากร / ตลาดรองรับ
+        </div>
+
+        <!-- Two Columns (Give & Take) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- GIVE Column -->
+          <div class="bg-emerald-50/60 border border-emerald-200 p-4 rounded-2xl">
+            <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-900 mb-2">
+              <i class="fa-solid fa-hand-holding-heart text-emerald-600"></i>
+              <span>สิ่งที่หน่วยงานพร้อมสนับสนุน (GIVE - สิ่งที่มี)</span>
+            </div>
+            <textarea 
+              id="resp-q3-give" 
+              rows="3" 
+              placeholder="เช่น มีสถานที่ฝึกอบรม, มีครู/วิทยากรเชี่ยวชาญ, มีเครื่องมือ/อุปกรณ์, มีงบประมาณสนับสนุนบางส่วน..." 
+              class="w-full bg-white border border-emerald-300 rounded-xl p-2.5 text-xs text-slate-800 font-sarabun focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            ></textarea>
+          </div>
+
+          <!-- TAKE Column -->
+          <div class="bg-sky-50/60 border border-sky-200 p-4 rounded-2xl">
+            <div class="flex items-center gap-1.5 text-xs font-bold text-sky-900 mb-2">
+              <i class="fa-solid fa-hands-holding-circle text-sky-600"></i>
+              <span>สิ่งที่อยากให้เพื่อนภาคีหนุนเสริม (TAKE - สิ่งที่ต้องการ)</span>
+            </div>
+            <textarea 
+              id="resp-q3-take" 
+              rows="3" 
+              placeholder="เช่น ต้องการตลาดรองรับผลงาน, ต้องการสถานที่ฝึกงาน, ต้องการวิทยากรเฉพาะทางด้านดิจิทัล, ต้องการเกณฑ์ Credit Bank..." 
+              class="w-full bg-white border border-sky-300 rounded-xl p-2.5 text-xs text-slate-800 font-sarabun focus:outline-none focus:ring-2 focus:ring-sky-500"
+            ></textarea>
+          </div>
+
+        </div>
+
+        <!-- Remarks -->
+        <div class="mt-4">
+          <label class="block text-[11px] font-semibold text-slate-600 mb-1">ข้อคิดเห็น / ข้อเสนอแนะอื่นๆ เพิ่มเติม (ถ้ามี):</label>
+          <input 
+            type="text" 
+            id="resp-remarks" 
+            placeholder="ระบุข้อเสนอแนะเพิ่มเติมสำหรับ ศธจ.เชียงใหม่..." 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white"
+          >
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bottom Submit Banner -->
+    <div class="mt-6 bg-slate-900 text-white p-5 sm:p-6 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+      <div class="space-y-1 text-center sm:text-left">
+        <h4 class="font-extrabold text-sm sm:text-base text-teal-300">
+          พร้อมส่งความคิดเห็นสู่ที่ประชุมและ Google Sheets แล้วหรือยัง?
+        </h4>
+        <p class="text-xs text-slate-300 font-sarabun">
+          ข้อมูลคำตอบจะถูกบันทึกเข้า Spreadsheet กลางของ ศธจ.เชียงใหม่ ทันที
+        </p>
+      </div>
+      <button 
+        type="button" 
+        onclick="saveDiscussionToGoogleSheet()" 
+        class="w-full sm:w-auto px-6 py-3 bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-lg transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 shrink-0"
+      >
+        <i class="fa-solid fa-paper-plane"></i>
+        <span>ส่งคำตอบลง Google Sheets ทันที</span>
+      </button>
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       PROJECT DETAILS MODAL POPUP
+       ========================================================= -->
+  <div id="project-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-slate-200">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+        <div>
+          <span id="modal-code" class="text-xs font-mono font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md">L2E-2568-XXXX</span>
+          <h3 id="modal-title" class="text-lg font-extrabold text-slate-900 mt-1">ชื่อโครงการ</h3>
+        </div>
+        <button type="button" onclick="closeProjectModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto space-y-4 text-xs text-slate-700 font-sarabun" id="modal-content">
+        <!-- Dynamic Content -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+        <span id="modal-status-badge" class="px-2.5 py-1 rounded-full font-bold text-[11px]">สถานะ</span>
+        <button type="button" onclick="closeProjectModal()" class="px-4 py-2 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-900 transition">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       JAVASCRIPT LOGIC & DATA ENGINE
+       ========================================================= -->
+  <script>
+    const DATA_SPREADSHEET_ID = '1W2LEgQdvGNCdxPpk6EWuPXHoxyOUve8aF-QwGt33TJ4';
+    const RESPONSES_SPREADSHEET_ID = '1NEL-jetzI51Ok8JkfiGHXVqWAxT5N0jefWPBWgPmff0';
+    
+    // 23 โครงการเริ่มต้น (Embedded Master Cache)
+    let projectsData = [
+      {
+        id: "L2E-2568-0022",
+        name: "โครงการยกระดับคุณภาพชีวิตแรงงานนอกระบบโดยเครือข่ายชุมชนผ่านการขึ้นทะเบียนแรงงานนอกระบบ",
+        agency: "สำนักงานแรงงานจังหวัดเชียงใหม่",
+        ministry: "กระทรวงแรงงาน",
+        districts: "พร้าว · แม่อาย",
+        sectors: "เสริมสวยและความงาม · หัตถศิลป์",
+        learningType: "อบรมระยะสั้น",
+        education: "เยาวชน/ประชาชนทั่วไป",
+        ageGroup: "60 ปีขึ้นไป · 45-59 ปี",
+        targetGroup: "ผู้สูงอายุ · ประชาชนทั่วไป",
+        target: 2,
+        applicants: 40,
+        participants: 40,
+        passed: 40,
+        tracked: 40,
+        used: 0,
+        budget: 51400,
+        outcomes: "มีรายได้จากทักษะ",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0023",
+        name: "กิจกรรมการฝึกอบรมหลักสูตรเชฟอาหารไทยมืออาชีพ (ภาคเหนือตอนบน)",
+        agency: "อุทยานวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยเชียงใหม่",
+        ministry: "อว. (อุดมศึกษาฯ)",
+        districts: "เมืองเชียงใหม่",
+        sectors: "การประกอบและบริการอาหาร",
+        learningType: "หลักสูตรในระบบ · อบรมระยะสั้น",
+        education: "เยาวชน/ประชาชนทั่วไป",
+        ageGroup: "18-24 ปี · 35-44 ปี · 25-34 ปี · 45-59 ปี",
+        targetGroup: "ผู้ว่างงาน · ประชาชนทั่วไป",
+        target: 2000,
+        applicants: 0,
+        participants: 2200,
+        passed: 0,
+        tracked: 0,
+        used: 0,
+        budget: 0,
+        outcomes: "มีรายได้จากทักษะ · เริ่มต้นธุรกิจ · มีรายได้ต่อเนื่อง",
+        status: "ไม่เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0024",
+        name: "กิจกรรมส่งเสริมการท่องเที่ยวประเพณีท้องถิ่นวิถีชาติพันธุ์ล้านนา ภายใต้โครงการส่งเสริมการท่องเที่ยวชาติพันธุ์สีสันแห่งล้านนา",
+        agency: "สำนักงานการท่องเที่ยวและกีฬาจังหวัดเชียงใหม่",
+        ministry: "กระทรวงการท่องเที่ยวและกีฬา",
+        districts: "เมืองเชียงใหม่",
+        sectors: "อัญมณี เครื่องประดับ และโลหะมีค่า · แฟชั่น · การประดิษฐ์ · ซอฟต์แวร์",
+        learningType: "อบรมระยะสั้น",
+        education: "เยาวชน/ประชาชนทั่วไป",
+        ageGroup: "35-44 ปี · 45-59 ปี · 60 ปีขึ้นไป",
+        targetGroup: "กลุ่มชาติพันธุ์/บนพื้นที่สูง · ประชาชนทั่วไป",
+        target: 0,
+        applicants: 0,
+        participants: 0,
+        passed: 100,
+        tracked: 100,
+        used: 0,
+        budget: 4000000,
+        outcomes: "มีรายได้จากทักษะ · ได้รับ Certificate/คุณวุฒิ · ศึกษาต่อ",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0025",
+        name: "กิจกรรมส่งเสริมการท่องเที่ยวเชิงอาหาร “สำรับชาติพันธุ์ล้านนา”",
+        agency: "สำนักงานการท่องเที่ยวและกีฬาจังหวัดเชียงใหม่",
+        ministry: "กระทรวงการท่องเที่ยวและกีฬา",
+        districts: "เมืองเชียงใหม่",
+        sectors: "การประกอบและบริการอาหาร · แปรรูปอาหาร · เทคโนโลยีผลิตภัณฑ์อาหาร",
+        learningType: "อบรมระยะสั้น",
+        education: "เยาวชน/ประชาชนทั่วไป",
+        ageGroup: "25-34 ปี · 35-44 ปี · 45-59 ปี",
+        targetGroup: "กลุ่มชาติพันธุ์/บนพื้นที่สูง · ประชาชนทั่วไป",
+        target: 100,
+        applicants: 0,
+        participants: 0,
+        passed: 100,
+        tracked: 100,
+        used: 0,
+        budget: 2500000,
+        outcomes: "ได้รับ Certificate/คุณวุฒิ",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0026",
+        name: "กิจกรรม เพิ่มทักษะด้านอาชีพแก่นักเรียนที่ไม่ได้เรียนต่อหลังจบการศึกษาภาคบังคับ",
+        agency: "สถาบันพัฒนาฝีมือแรงงาน 19 เชียงใหม่",
+        ministry: "กระทรวงแรงงาน",
+        districts: "แม่ริม · เมืองเชียงใหม่ · หางดง",
+        sectors: "พลังงาน ไฟฟ้า และอิเล็กทรอนิกส์ · การประกอบและบริการอาหาร · การท่องเที่ยว",
+        learningType: "ฝึกในสถานประกอบการ (Work-based)",
+        education: "มัธยมศึกษาตอนต้น · มัธยมศึกษาตอนปลาย",
+        ageGroup: "15-17 ปี · 18-24 ปี",
+        targetGroup: "นักเรียนที่ไม่ได้เรียนต่อหลังจบภาคบังคับ",
+        target: 30,
+        applicants: 30,
+        participants: 30,
+        passed: 23,
+        tracked: 0,
+        used: 0,
+        budget: 499200,
+        outcomes: "มีรายได้จากทักษะ · ได้รับ Certificate/คุณวุฒิ",
+        status: "ไม่เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0027",
+        name: "กิจกรรมการพัฒนาผู้เรียนให้มีทักษะอาชีพที่จำเป็นแห่งอนาคต (Future Skills) และ Learn to Earn สพม.เชียงใหม่",
+        agency: "สำนักงานเขตพื้นที่การศึกษามัธยมศึกษาเชียงใหม่ (34 โรงเรียน)",
+        ministry: "สพฐ. (ศึกษาธิการ)",
+        districts: "ทั้ง 25 อำเภอ (เมืองเชียงใหม่, จอมทอง, แม่แจ่ม, เชียงดาว, ดอยสะเก็ด ฯลฯ)",
+        sectors: "ตามบริบทสถานศึกษา (หลากหลาย 34 โรงเรียน)",
+        learningType: "สอดแทรกกลุ่มสาระการงานอาชีพ / ศิลปหัตถกรรม",
+        education: "มัธยมศึกษาตอนปลาย · มัธยมศึกษาตอนต้น",
+        ageGroup: "ต่ำกว่า 15 ปี · 15-17 ปี · 18-24 ปี",
+        targetGroup: "นักเรียนมัธยมศึกษา",
+        target: 34,
+        applicants: 34,
+        participants: 34,
+        passed: 34,
+        tracked: 34,
+        used: 0,
+        budget: 0,
+        outcomes: "มีรายได้ระหว่างเรียน",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0028",
+        name: "โครงการยกระดับผลิตภาพและพัฒนากำลังคนเพื่อสร้างความสามารถในการแข่งขันภาคอุตสาหกรรม",
+        agency: "สถาบันพัฒนาฝีมือแรงงาน 19 เชียงใหม่",
+        ministry: "กระทรวงแรงงาน",
+        districts: "แม่ริม · ดอยสะเก็ด · สันทราย · เมืองเชียงใหม่",
+        sectors: "อุตสาหกรรมและบริการขั้นสูง",
+        learningType: "อบรมระยะสั้น",
+        education: "ปวช. · ปวส. · ปริญญาตรี · ม.ปลาย",
+        ageGroup: "18-24 ปี · 25-34 ปี · 35-44 ปี",
+        targetGroup: "แรงงานในสถานประกอบการ · ผู้ว่างงาน",
+        target: 460,
+        applicants: 460,
+        participants: 460,
+        passed: 384,
+        tracked: 0,
+        used: 0,
+        budget: 1558000,
+        outcomes: "มีรายได้จากทักษะ · ได้รับ Certificate/คุณวุฒิ",
+        status: "ไม่เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0032",
+        name: "โครงการการจัดการศึกษาเพื่อการมีงานทำ และเสริมสร้างทักษะอาชีพในโรงเรียน สพป.ชม. 6",
+        agency: "สพป.เชียงใหม่ เขต 6",
+        ministry: "สพฐ. (ศึกษาธิการ)",
+        districts: "จอมทอง · แม่แจ่ม · กัลยาณิวัฒนา",
+        sectors: "การงานอาชีพและทักษะพื้นฐาน",
+        learningType: "หลักสูตรในระบบ",
+        education: "ประถมศึกษา · มัธยมศึกษาตอนต้น",
+        ageGroup: "ต่ำกว่า 15 ปี · 15-17 ปี",
+        targetGroup: "นักเรียนขั้นพื้นฐาน",
+        target: 11028,
+        applicants: 0,
+        participants: 0,
+        passed: 11028,
+        tracked: 0,
+        used: 0,
+        budget: 0,
+        outcomes: "มีทักษะอาชีพเพื่อการศึกษาต่อ",
+        status: "ไม่เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0033",
+        name: "โครงการส่งเสริมและพัฒนาทักษะอาชีพสำหรับนักเรียน ศูนย์การศึกษาพิเศษ เขตการศึกษา 8",
+        agency: "ศูนย์การศึกษาพิเศษ เขตการศึกษา 8 จังหวัดเชียงใหม่",
+        ministry: "สพฐ. (ศึกษาธิการ)",
+        districts: "จอมทอง · เชียงดาว · ดอยสะเก็ด · แม่แตง · แม่ริม · ฝาง ฯลฯ",
+        sectors: "ทักษะเฉพาะกลุ่มผู้เรียนพิเศษ",
+        learningType: "อบรมระยะสั้น",
+        education: "เตรียมความพร้อม",
+        ageGroup: "ต่ำกว่า 15 ปี",
+        targetGroup: "ผู้เรียนที่มีความต้องการพิเศษ · ผู้ปกครอง",
+        target: 252,
+        applicants: 252,
+        participants: 252,
+        passed: 252,
+        tracked: 252,
+        used: 0,
+        budget: 30000,
+        outcomes: "พัฒนาทักษะการพึ่งพาตนเอง",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0035",
+        name: "โครงการ 3 ม. มีงาน มีเงิน มีวุฒิ",
+        agency: "วิทยาลัยเทคโนโลยีพาณิชยการลานนา",
+        ministry: "สอศ. (อาชีวศึกษา)",
+        districts: "เมืองเชียงใหม่",
+        sectors: "การตลาด",
+        learningType: "ทวิภาคี/ทวิศึกษา",
+        education: "ปวส.",
+        ageGroup: "18-24 ปี",
+        targetGroup: "ประชาชนทั่วไป",
+        target: 10,
+        applicants: 5,
+        participants: 5,
+        passed: 5,
+        tracked: 5,
+        used: 0,
+        budget: 0,
+        outcomes: "มีงานทำและสำเร็จการศึกษา",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0038",
+        name: "กิจกรรมหารายได้ระหว่างเรียน โรงเรียนโสตศึกษาอนุสารสุนทร",
+        agency: "โรงเรียนโสตศึกษาอนุสารสุนทร",
+        ministry: "อื่นๆ (สศศ)",
+        districts: "เมืองเชียงใหม่ · สันทราย",
+        sectors: "ทักษะอาชีพสถานการณ์จริง",
+        learningType: "ฝึกในสถานประกอบการ (Work-based)",
+        education: "มัธยมศึกษาตอนต้น · มัธยมศึกษาตอนปลาย",
+        ageGroup: "15-17 ปี · ต่ำกว่า 15 ปี",
+        targetGroup: "ผู้เรียนที่มีความต้องการพิเศษ",
+        target: 0,
+        applicants: 0,
+        participants: 0,
+        passed: 19,
+        tracked: 19,
+        used: 19,
+        budget: 0,
+        outcomes: "มีรายได้จากทักษะ",
+        status: "ไม่เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0040",
+        name: "โครงการการเป็นผู้ประกอบการหรือประกอบอาชีพอิสระ (หารายได้ระหว่างเรียน) วิทยาลัยการอาชีพฝาง",
+        agency: "วิทยาลัยการอาชีพฝาง",
+        ministry: "สอศ. (อาชีวศึกษา)",
+        districts: "ฝาง",
+        sectors: "การตลาด · การจัดการ · การเงินและบัญชี · การประกอบและบริการอาหาร",
+        learningType: "หลักสูตรในระบบ",
+        education: "ปวช. · ปวส.",
+        ageGroup: "15-17 ปี · 18-24 ปี",
+        targetGroup: "กลุ่มชาติพันธุ์/บนพื้นที่สูง · นักศึกษา",
+        target: 50,
+        applicants: 50,
+        participants: 50,
+        passed: 50,
+        tracked: 50,
+        used: 50,
+        budget: 30000,
+        outcomes: "เริ่มต้นธุรกิจ · ศึกษาต่อ · เกิดผลิตภัณฑ์",
+        status: "เผยแพร่",
+        bp: "ใช่"
+      },
+      {
+        id: "L2E-2568-0041",
+        name: "ฝึกอบรมอาชีพระยะสั้น เทศบาลนครเชียงใหม่",
+        agency: "เทศบาลนครเชียงใหม่",
+        ministry: "องค์กรปกครองส่วนท้องถิ่น (อปท.)",
+        districts: "เมืองเชียงใหม่",
+        sectors: "อาชีพชุมชนและบริการ",
+        learningType: "อบรมระยะสั้น",
+        education: "ประชาชนทั่วไป",
+        ageGroup: "ทุกช่วงวัย",
+        targetGroup: "ประชาชนในเขตเทศบาล",
+        target: 0,
+        applicants: 0,
+        participants: 0,
+        passed: 0,
+        tracked: 0,
+        used: 0,
+        budget: 0,
+        outcomes: "สร้างงาน สร้างอาชีพ",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0042",
+        name: "โครงการออมสินสารพัดช่างสารพัดอาชีพ เพื่อสร้างงาน สร้างอาชีพ",
+        agency: "วิทยาลัยสารพัดช่างเชียงใหม่",
+        ministry: "สอศ. (อาชีวศึกษา)",
+        districts: "เมืองเชียงใหม่",
+        sectors: "เสริมสวยและความงาม · การประกอบและบริการอาหาร",
+        learningType: "อบรมระยะสั้น",
+        education: "หลักสูตรระยะสั้น",
+        ageGroup: "18-24 ปี",
+        targetGroup: "ผู้เรียนที่มีความต้องการพิเศษ",
+        target: 60,
+        applicants: 60,
+        participants: 60,
+        passed: 35,
+        tracked: 7,
+        used: 0,
+        budget: 24000,
+        outcomes: "เริ่มต้นธุรกิจ",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0043",
+        name: "สัปดาห์คณิตศาสตร์และตลาดนัดนักเรียน",
+        agency: "โรงเรียนสาธิตมหาวิทยาลัยราชภัฏเชียงใหม่",
+        ministry: "อว. (อุดมศึกษาฯ)",
+        districts: "เมืองเชียงใหม่",
+        sectors: "การตลาด · การค้าขาย",
+        learningType: "การจัดกิจกรรมในสถานศึกษา",
+        education: "ประถมศึกษา",
+        ageGroup: "ต่ำกว่า 15 ปี",
+        targetGroup: "นักเรียนประถมศึกษา",
+        target: 584,
+        applicants: 584,
+        participants: 562,
+        passed: 562,
+        tracked: 562,
+        used: 562,
+        budget: 5000,
+        outcomes: "เริ่มต้นธุรกิจ · ศึกษาต่อ",
+        status: "ไม่เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0044",
+        name: "โครงการเตรียมความพร้อมแก่กลุ่มเป้าหมายก่อนเข้าสู่ตลาดแรงงาน กิจกรรมแนะแนวอาชีพ",
+        agency: "สำนักงานจัดหางานจังหวัดเชียงใหม่",
+        ministry: "กระทรวงแรงงาน",
+        districts: "ทั้ง 25 อำเภอ (เมืองเชียงใหม่, สันทราย, แม่ริม, ฝาง, ฮอด ฯลฯ)",
+        sectors: "แนะแนวอาชีพและโลกเสมือนจริงทุกกลุ่มอาชีพ",
+        learningType: "Inspiration Talks / Career Planning / แนะแนว",
+        education: "ม.ต้น · ม.ปลาย · ปวช. · ปวส. · ปริญญาตรี",
+        ageGroup: "ต่ำกว่า 15 ปี · 15-17 ปี · 18-24 ปี",
+        targetGroup: "ประชาชนทั่วไป · ผู้ว่างงาน · กลุ่มชาติพันธุ์",
+        target: 2800,
+        applicants: 2830,
+        participants: 2860,
+        passed: 2830,
+        tracked: 2500,
+        used: 0,
+        budget: 22400,
+        outcomes: "ศึกษาต่อ/วางแผนอาชีพ",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0045",
+        name: "ส่งเสริมและพัฒนาทักษะอาชีพสำหรับนักเรียน โรงเรียนราชประชานุเคราะห์ 60",
+        agency: "โรงเรียนราชประชานุเคราะห์ 60 จังหวัดเชียงใหม่",
+        ministry: "สพฐ. (ศึกษาธิการ)",
+        districts: "แม่ริม",
+        sectors: "สิ่งทอและเครื่องนุ่งห่ม · การประดิษฐ์ · การประกอบและบริการอาหาร · เกษตรผสมผสาน",
+        learningType: "หลักสูตรในระบบ",
+        education: "ประถมศึกษา · ม.ต้น · ม.ปลาย",
+        ageGroup: "ต่ำกว่า 15 ปี · 15-17 ปี",
+        targetGroup: "นักเรียน ป.4 - ม.6",
+        target: 849,
+        applicants: 849,
+        participants: 859,
+        passed: 849,
+        tracked: 0,
+        used: 0,
+        budget: 0,
+        outcomes: "ทักษะอาชีพพึ่งพาตนเอง",
+        status: "ไม่เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0046",
+        name: "ส่งเสริมทักษะอาชีพ และการมีรายได้ระหว่างเรียน สพป.เชียงใหม่ เขต 4",
+        agency: "สพป.เชียงใหม่ เขต 4",
+        ministry: "สพฐ. (ศึกษาธิการ)",
+        districts: "สันป่าตอง · หางดง · สารภี · ดอยหล่อ · แม่วาง",
+        sectors: "แปรรูปอาหาร · บริการสุขภาพ · การตลาด · เกษตร · การประดิษฐ์ · หัตถศิลป์",
+        learningType: "หลักสูตรในระบบ",
+        education: "ประถมศึกษา · ม.ต้น · ม.ปลาย",
+        ageGroup: "ต่ำกว่า 15 ปี · 15-17 ปี",
+        targetGroup: "ผู้เรียนที่มีความต้องการพิเศษ",
+        target: 84,
+        applicants: 84,
+        participants: 84,
+        passed: 64,
+        tracked: 84,
+        used: 0,
+        budget: 20000,
+        outcomes: "มีรายได้จากทักษะ · เริ่มต้นธุรกิจ · ได้ Certificate",
+        status: "เผยแพร่",
+        bp: "ใช่"
+      },
+      {
+        id: "L2E-2568-0047",
+        name: "โครงการอบรมเชิงปฏิบัติการบ่มเพาะผู้ประกอบการอาชีวศึกษา วิทยาลัยเทคนิคสันกำแพง",
+        agency: "วิทยาลัยเทคนิคสันกำแพง",
+        ministry: "สอศ. (อาชีวศึกษา)",
+        districts: "แม่ออน · สันกำแพง",
+        sectors: "การเงินและบัญชี · การตลาด · การประกอบและบริการอาหาร · แปรรูปอาหาร",
+        learningType: "อบรมระยะสั้น",
+        education: "ปวช.",
+        ageGroup: "15-17 ปี · 18-24 ปี",
+        targetGroup: "นักเรียนนักศึกษาที่สนใจการประกอบธุรกิจ",
+        target: 25,
+        applicants: 25,
+        participants: 25,
+        passed: 25,
+        tracked: 25,
+        used: 0,
+        budget: 30000,
+        outcomes: "เริ่มต้นธุรกิจ · มีรายได้จากทักษะ",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0048",
+        name: "โครงการการจัดการอาชีวศึกษาระบบทวิภาคี วิทยาลัยเทคโนโลยีพณิชยการเชียงใหม่",
+        agency: "วิทยาลัยเทคโนโลยีพณิชยการเชียงใหม่",
+        ministry: "สอศ. (อาชีวศึกษา)",
+        districts: "เมืองเชียงใหม่ · สันทราย · สันกำแพง · หางดง · แม่ริม · สารภี",
+        sectors: "เครื่องกลและยานยนต์ · พลังงานไฟฟ้า · การเงิน · การตลาด · ดิจิทัล · การโรงแรม · ท่องเที่ยว",
+        learningType: "ทวิภาคี/ทวิศึกษา",
+        education: "ปวส.",
+        ageGroup: "18-24 ปี",
+        targetGroup: "ผู้เรียนสายอาชีพ",
+        target: 103,
+        applicants: 66,
+        participants: 66,
+        passed: 59,
+        tracked: 63,
+        used: 59,
+        budget: 10000,
+        outcomes: "มีงานทำในสถานประกอบการ",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0049",
+        name: "โครงการสืบสานงานตามพระราชดำริ/นักธุรกิจน้อย มีคุณธรรมนำสู่เศรษฐกิจสร้างสรรค์",
+        agency: "โรงเรียนราชประชานุเคราะห์ 30",
+        ministry: "สพฐ. (ศึกษาธิการ)",
+        districts: "แม่อาย",
+        sectors: "หัตถศิลป์ · การประดิษฐ์ · การผลิตพืช",
+        learningType: "หลักสูตรในระบบ",
+        education: "มัธยมศึกษาตอนต้น · มัธยมศึกษาตอนปลาย",
+        ageGroup: "15-17 ปี",
+        targetGroup: "ผู้ด้อยโอกาส · กลุ่มชาติพันธุ์/บนพื้นที่สูง",
+        target: 450,
+        applicants: 450,
+        participants: 450,
+        passed: 450,
+        tracked: 450,
+        used: 450,
+        budget: 20000,
+        outcomes: "มีรายได้จากทักษะ · เริ่มต้นธุรกิจ · ศึกษาต่อ",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0050",
+        name: "โครงการพัฒนาอาชีพชุมชน สกร.ประจำจังหวัดเชียงใหม่",
+        agency: "สำนักงานส่งเสริมการเรียนรู้ประจำจังหวัดเชียงใหม่ (สกร.)",
+        ministry: "สกร./กศน.",
+        districts: "ทั้ง 25 อำเภอ (เมืองเชียงใหม่, ดอยเต่า, อมก๋อย, สะเมิง, เวียงแหง ฯลฯ)",
+        sectors: "บริการสุขภาพ · ศิลปะ · หัตถศิลป์ · อัญมณี · แปรรูปอาหาร · เสริมสวย · เกษตร",
+        learningType: "อบรมระยะสั้น",
+        education: "ประถมศึกษา · ม.ต้น · ม.ปลาย",
+        ageGroup: "18-24 ปี · 25-34 ปี · 35-44 ปี · 45-59 ปี · 60 ปีขึ้นไป",
+        targetGroup: "ประชาชนทั่วไป",
+        target: 2440,
+        applicants: 4265,
+        participants: 4265,
+        passed: 4265,
+        tracked: 4265,
+        used: 0,
+        budget: 0,
+        outcomes: "สร้างงาน สร้างอาชีพชุมชน",
+        status: "เผยแพร่",
+        bp: "ไม่"
+      },
+      {
+        id: "L2E-2568-0051",
+        name: "ผลิตภัณฑ์ฝาขวด “Cap2 Craft”",
+        agency: "โรงเรียนออทิสติกเชียงใหม่",
+        ministry: "สพฐ. (ศึกษาธิการ)",
+        districts: "เมืองเชียงใหม่",
+        sectors: "ศิลปะและการออกแบบ · การประดิษฐ์",
+        learningType: "อบรมระยะสั้น",
+        education: "การศึกษาพิเศษ",
+        ageGroup: "ต่ำกว่า 15 ปี · 15-17 ปี",
+        targetGroup: "ผู้เรียนที่มีความต้องการพิเศษ",
+        target: 0,
+        applicants: 0,
+        participants: 0,
+        passed: 45,
+        tracked: 45,
+        used: 0,
+        budget: 20000,
+        outcomes: "มีรายได้จากทักษะ",
+        status: "เผยแพร่",
+        bp: "ใช่"
+      }
+    ];
+
+    let currentMainTab = 'pitch';
+    let currentSlide = 0;
+    const totalSlides = 3;
+    let chartInstance1 = null;
+    let chartInstance2 = null;
+    let chartInstance3 = null;
+
+    // --------------------------------------------------
+    // 0. Toast Notification System
+    // --------------------------------------------------
+    function showToast(message, isSuccess = true) {
+      const toastEl = document.getElementById('toast-notify');
+      const toastBox = document.getElementById('toast-box');
+      const toastMsg = document.getElementById('toast-msg');
+      const toastIcon = document.getElementById('toast-icon');
+
+      if (!toastEl) return;
+      toastMsg.innerText = message;
+      
+      if (isSuccess) {
+        toastBox.className = "bg-emerald-950 text-emerald-100 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-emerald-600";
+        toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+      } else {
+        toastBox.className = "bg-rose-950 text-rose-100 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-rose-600";
+        toastIcon.className = "fa-solid fa-triangle-exclamation text-rose-400 text-lg";
+      }
+
+      toastEl.classList.remove('translate-y-24', 'opacity-0');
+      toastEl.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toastEl.classList.remove('translate-y-0', 'opacity-100');
+        toastEl.classList.add('translate-y-24', 'opacity-0');
+      }, 4000);
+    }
+
+
+    // --------------------------------------------------
+    // 1. Navigation & Tab Switching
+    // --------------------------------------------------
+    function switchMainTab(tab) {
+      currentMainTab = tab;
+      
+      const vPitch = document.getElementById('view-pitch');
+      const vExplorer = document.getElementById('view-explorer');
+      const vDiscussion = document.getElementById('view-discussion');
+
+      const btnPitch = document.getElementById('tab-btn-pitch');
+      const btnExplorer = document.getElementById('tab-btn-explorer');
+      const btnDiscussion = document.getElementById('tab-btn-discussion');
+
+      vPitch.classList.add('hidden');
+      vExplorer.classList.add('hidden');
+      vDiscussion.classList.add('hidden');
+
+      [btnPitch, btnExplorer, btnDiscussion].forEach(b => {
+        b.className = "main-tab-btn px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer";
+      });
+
+      if (tab === 'pitch') {
+        vPitch.classList.remove('hidden');
+        btnPitch.className = "main-tab-btn px-3 py-1 rounded-lg bg-teal-600 text-white font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        initChartsSafely();
+      } else if (tab === 'explorer') {
+        vExplorer.classList.remove('hidden');
+        btnExplorer.className = "main-tab-btn px-3 py-1 rounded-lg bg-teal-600 text-white font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer";
+        applyProjectFilters();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (tab === 'discussion') {
+        vDiscussion.classList.remove('hidden');
+        btnDiscussion.className = "main-tab-btn px-3 py-1 rounded-lg bg-teal-600 text-white font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer";
+        loadSavedDraftAnswers();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function goToSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= totalSlides) index = totalSlides - 1;
+      currentSlide = index;
+
+      const target = document.getElementById(`screen-${index}`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      updatePitchNav();
+    }
+    function nextSlide() { goToSlide(currentSlide + 1); }
+    function prevSlide() { goToSlide(currentSlide - 1); }
+
+    function updatePitchNav() {
+      const slideNumEl = document.getElementById('slide-num');
+      if (slideNumEl) slideNumEl.innerText = `${currentSlide + 1}/${totalSlides}`;
+
+      for (let i = 0; i < totalSlides; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (!dot) continue;
+        if (i === currentSlide) {
+          dot.className = "step-btn px-3 py-0.5 rounded-full bg-teal-600 text-white font-bold transition";
+        } else {
+          dot.className = "step-btn px-3 py-0.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
+        }
+      }
+    }
+
+    // Theme & Font
+    function setAppTheme(themeName) {
+      document.documentElement.setAttribute('data-theme', themeName);
+      const bOcean = document.getElementById('btn-theme-ocean');
+      const bSage = document.getElementById('btn-theme-sage');
+      const bWarm = document.getElementById('btn-theme-warm');
+
+      [bOcean, bSage, bWarm].forEach(b => {
+        if (b) b.className = b.className.replace('border-white', 'border-transparent');
+      });
+
+      if (themeName === 'sage' && bSage) bSage.className = bSage.className.replace('border-transparent', 'border-white');
+      else if (themeName === 'warm' && bWarm) bWarm.className = bWarm.className.replace('border-transparent', 'border-white');
+      else if (bOcean) bOcean.className = bOcean.className.replace('border-transparent', 'border-white');
+    }
+
+    function setFontSize(size) {
+      const root = document.documentElement;
+      const fSm = document.getElementById('font-sm');
+      const fBase = document.getElementById('font-base');
+      const fLg = document.getElementById('font-lg');
+
+      [fSm, fBase, fLg].forEach(b => {
+        if (b) b.className = "px-1.5 py-0.5 rounded hover:text-slate-900 transition";
+      });
+
+      if (size === 'sm') {
+        root.style.setProperty('--font-scale', '0.95');
+        if (fSm) fSm.className = "px-1.5 py-0.5 rounded bg-white text-teal-700 shadow-xs transition";
+      } else if (size === 'lg') {
+        root.style.setProperty('--font-scale', '1.20');
+        if (fLg) fLg.className = "px-1.5 py-0.5 rounded bg-white text-teal-700 shadow-xs transition";
+      } else {
+        root.style.setProperty('--font-scale', '1.05');
+        if (fBase) fBase.className = "px-1.5 py-0.5 rounded bg-white text-teal-700 shadow-xs transition";
+      }
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.warn(err));
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+      if (currentMainTab === 'pitch') {
+        if (e.code === 'Space' || e.key === 'ArrowRight' || e.key === 'PageDown') {
+          e.preventDefault();
+          nextSlide();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          prevSlide();
+        }
+      }
+      if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullScreen();
+      }
+    });
+
+    window.addEventListener('scroll', () => {
+      if (currentMainTab !== 'pitch') return;
+      const height = window.innerHeight;
+      const scrollPos = window.scrollY || window.pageYOffset;
+      const slideIndex = Math.round(scrollPos / height);
+      if (slideIndex !== currentSlide && slideIndex >= 0 && slideIndex < totalSlides) {
+        currentSlide = slideIndex;
+        updatePitchNav();
+      }
+    });
+
+    function updateQrCode() {
+      const val = document.getElementById('qr-input').value.trim();
+      if (!val) return;
+      document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(val)}`;
+    }
+
+
+    // --------------------------------------------------
+    // 2. Google Sheets Live Integration
+    // --------------------------------------------------
+    function refreshData() {
+      const syncBtn = document.getElementById('sync-btn');
+      const syncIcon = document.getElementById('sync-icon');
+      const syncLabel = document.getElementById('sync-label');
+
+      syncIcon.className = "fa-solid fa-spinner fa-spin";
+      syncLabel.innerText = "กำลังดึง Sheets...";
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(response) {
+            if (response && response.status === 'success' && response.data.projects && response.data.projects.length > 0) {
+              normalizeAndSetProjects(response.data.projects);
+              syncSuccess(response.data.projects.length);
+            } else {
+              fallbackGvizFetch();
+            }
+          })
+          .withFailureHandler(function(err) {
+            console.warn("GAS Run Failed, falling back to public fetch:", err);
+            fallbackGvizFetch();
+          })
+          .getSpreadsheetData();
+      } else {
+        fallbackGvizFetch();
+      }
+    }
+
+    function fallbackGvizFetch() {
+      const gvizUrl = `https://docs.google.com/spreadsheets/d/${DATA_SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
+      fetch(gvizUrl)
+        .then(res => res.text())
+        .then(text => {
+          const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/);
+          if (match && match[1]) {
+            const json = JSON.parse(match[1]);
+            const table = json.table;
+            if (table && table.rows && table.rows.length > 0) {
+              const headers = table.cols.map(c => c ? (c.label || c.id) : '');
+              const parsedProjects = table.rows.map(r => {
+                const obj = {};
+                r.c.forEach((cell, idx) => {
+                  const h = headers[idx] || `col_${idx}`;
+                  obj[h] = cell ? (cell.v !== null ? cell.v : '') : '';
+                });
+                return obj;
+              });
+              normalizeAndSetProjects(parsedProjects);
+              syncSuccess(parsedProjects.length);
+              return;
+            }
+          }
+          syncSuccess(projectsData.length, true);
+        })
+        .catch(err => {
+          console.warn("GViz fetch failed, using internal cached dataset:", err);
+          syncSuccess(projectsData.length, true);
+        });
+    }
+
+    function syncSuccess(count, isCache = false) {
+      const syncIcon = document.getElementById('sync-icon');
+      const syncLabel = document.getElementById('sync-label');
+      syncIcon.className = "fa-solid fa-circle-check text-emerald-600";
+      syncLabel.innerText = isCache ? `ข้อมูลพร้อม (${count})` : `Sheets สด (${count})`;
+      document.getElementById('tab-proj-count').innerText = count;
+      populateFilterDropdowns();
+      applyProjectFilters();
+    }
+
+    function normalizeAndSetProjects(rawList) {
+      if (!Array.isArray(rawList) || rawList.length === 0) return;
+      
+      projectsData = rawList.map((item, idx) => {
+        return {
+          id: item['รหัส'] || item['รหัสโครงการ'] || item['id'] || `L2E-${idx+1}`,
+          name: item['ชื่อโครงการ'] || item['ชื่อ'] || item['name'] || 'ไม่มีชื่อโครงการ',
+          agency: item['หน่วยงาน'] || item['หน่วยงานที่ส่งข้อมูล'] || item['agency'] || '-',
+          ministry: item['สังกัด'] || item['สังกัดกระทรวง'] || item['ministry'] || '-',
+          districts: item['พื้นที่ดำเนินการ'] || item['อำเภอ'] || item['districts'] || 'เมืองเชียงใหม่',
+          sectors: item['กลุ่มอาชีพ'] || item['สาขาอาชีพ'] || item['sectors'] || '-',
+          learningType: item['รูปแบบการเรียนรู้'] || item['learningType'] || 'อบรมระยะสั้น',
+          education: item['ระดับการศึกษา'] || item['education'] || 'ประชาชนทั่วไป',
+          ageGroup: item['ช่วงอายุ'] || item['ageGroup'] || '-',
+          targetGroup: item['กลุ่มเป้าหมายเฉพาะ'] || item['targetGroup'] || '-',
+          target: Number(item['เป้าหมาย'] || item['เป้าหมายตามแผน'] || 0),
+          applicants: Number(item['ผู้สมัคร'] || item['ผู้สมัคร/สนใจ'] || 0),
+          participants: Number(item['ผู้เข้าร่วม'] || item['ผู้เข้าร่วมจริง'] || 0),
+          passed: Number(item['ผู้ผ่าน'] || item['ผู้ผ่านกิจกรรม'] || 0),
+          tracked: Number(item['ติดตามได้'] || item['ผู้ติดตามผลได้'] || 0),
+          used: Number(item['นำไปใช้'] || item['ผู้นำทักษะไปใช้จริง'] || 0),
+          budget: Number(item['งบประมาณ'] || item['งบประมาณรวม'] || 0),
+          outcomes: item['ผลลัพธ์'] || item['outcomes'] || '-',
+          status: item['สถานะ'] || (item['เผยแพร่'] ? 'เผยแพร่' : 'ไม่เผยแพร่'),
+          bp: item['เสนอ BP'] || item['BP'] || item['bp'] || 'ไม่'
+        };
+      });
+    }
+
+
+    // --------------------------------------------------
+    // 3. Project Explorer
+    // --------------------------------------------------
+    function populateFilterDropdowns() {
+      const districtSet = new Set();
+      const sectorSet = new Set();
+      const agencySet = new Set();
+      const learningSet = new Set();
+
+      projectsData.forEach(p => {
+        if (p.districts) p.districts.split('·').forEach(d => { if (d.trim()) districtSet.add(d.trim()); });
+        if (p.sectors) p.sectors.split('·').forEach(s => { if (s.trim()) sectorSet.add(s.trim()); });
+        if (p.ministry) agencySet.add(p.ministry.trim());
+        if (p.learningType) p.learningType.split('·').forEach(l => { if (l.trim()) learningSet.add(l.trim()); });
+      });
+
+      populateSelect('filter-district', Array.from(districtSet).sort());
+      populateSelect('filter-sector', Array.from(sectorSet).sort());
+      populateSelect('filter-agency', Array.from(agencySet).sort());
+      populateSelect('filter-learning', Array.from(learningSet).sort());
+    }
+
+    function populateSelect(selectId, items) {
+      const sel = document.getElementById(selectId);
+      const currentVal = sel.value;
+      const defaultOption = sel.options[0].outerHTML;
+      sel.innerHTML = defaultOption;
+      items.forEach(it => {
+        if (it && it !== '-') {
+          const opt = document.createElement('option');
+          opt.value = it;
+          opt.innerText = it;
+          sel.appendChild(opt);
+        }
+      });
+      sel.value = currentVal;
+    }
+
+    function applyProjectFilters() {
+      const q = document.getElementById('filter-search').value.toLowerCase().trim();
+      const dist = document.getElementById('filter-district').value;
+      const sec = document.getElementById('filter-sector').value;
+      const ag = document.getElementById('filter-agency').value;
+      const learn = document.getElementById('filter-learning').value;
+      const stat = document.getElementById('filter-status').value;
+
+      const filtered = projectsData.filter(p => {
+        if (q) {
+          const combined = `${p.id} ${p.name} ${p.agency} ${p.ministry} ${p.districts} ${p.sectors} ${p.outcomes}`.toLowerCase();
+          if (!combined.includes(q)) return false;
+        }
+        if (dist && (!p.districts || !p.districts.includes(dist))) return false;
+        if (sec && (!p.sectors || !p.sectors.includes(sec))) return false;
+        if (ag && (!p.ministry || !p.ministry.includes(ag))) return false;
+        if (learn && (!p.learningType || !p.learningType.includes(learn))) return false;
+        if (stat === 'bp' && p.bp !== 'ใช่') return false;
+        if (stat === 'เผยแพร่' && p.status !== 'เผยแพร่') return false;
+        if (stat === 'ไม่เผยแพร่' && p.status === 'เผยแพร่') return false;
+        return true;
+      });
+
+      renderProjectsTable(filtered);
+      updateFilterKPIs(filtered);
+    }
+
+    function updateFilterKPIs(list) {
+      const totalCount = list.length;
+      const totalBudget = list.reduce((acc, p) => acc + (p.budget || 0), 0);
+      const totalParticipants = list.reduce((acc, p) => acc + (p.participants || 0), 0);
+      const totalPassed = list.reduce((acc, p) => acc + (p.passed || 0), 0);
+      const totalTracked = list.reduce((acc, p) => acc + (p.tracked || 0), 0);
+      const totalUsed = list.reduce((acc, p) => acc + (p.used || 0), 0);
+
+      document.getElementById('stat-proj-count').innerText = totalCount;
+      document.getElementById('stat-budget').innerText = (totalBudget / 1000000).toFixed(2) + ' M';
+      document.getElementById('stat-participants').innerText = totalParticipants.toLocaleString();
+      document.getElementById('stat-passed').innerText = totalPassed.toLocaleString();
+      document.getElementById('stat-tracked').innerText = totalTracked.toLocaleString();
+      document.getElementById('stat-used').innerText = totalUsed.toLocaleString();
+    }
+
+    function renderProjectsTable(list) {
+      const tbody = document.getElementById('projects-table-body');
+      const empty = document.getElementById('empty-state');
+      tbody.innerHTML = '';
+
+      if (list.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      list.forEach((p, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-teal-50/40 transition cursor-pointer";
+        tr.onclick = (e) => {
+          if (!e.target.closest('button')) openProjectModal(p);
+        };
+
+        const bpBadge = p.bp === 'ใช่' ? '<span class="ml-1.5 px-1.5 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded">BP</span>' : '';
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono font-bold text-teal-800 whitespace-nowrap">${p.id}</td>
+          <td class="py-3 px-4 font-semibold text-slate-900 max-w-xs">
+            <div class="line-clamp-2">${p.name} ${bpBadge}</div>
+          </td>
+          <td class="py-3 px-4 text-slate-600">
+            <div class="font-medium">${p.agency}</div>
+            <div class="text-[10px] text-slate-400">${p.ministry}</div>
+          </td>
+          <td class="py-3 px-4 text-slate-600 max-w-[140px] truncate" title="${p.districts}">${p.districts}</td>
+          <td class="py-3 px-4 text-slate-600 max-w-[150px] truncate" title="${p.sectors}">${p.sectors}</td>
+          <td class="py-3 px-4 text-center font-bold text-teal-700">${(p.passed || 0).toLocaleString()}</td>
+          <td class="py-3 px-4 text-right font-medium text-slate-800">${p.budget > 0 ? (p.budget).toLocaleString() + ' ฿' : '-'}</td>
+          <td class="py-3 px-4 text-center whitespace-nowrap">
+            <button type="button" onclick="openProjectModalByRef(${idx})" class="px-2.5 py-1 bg-slate-100 hover:bg-teal-600 hover:text-white rounded-lg text-[11px] font-bold text-slate-600 transition">
+              <i class="fa-solid fa-circle-info mr-1"></i> ดูลึก
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function resetFilters() {
+      document.getElementById('filter-search').value = '';
+      document.getElementById('filter-district').value = '';
+      document.getElementById('filter-sector').value = '';
+      document.getElementById('filter-agency').value = '';
+      document.getElementById('filter-learning').value = '';
+      document.getElementById('filter-status').value = '';
+      applyProjectFilters();
+    }
+
+    function exportFilteredCSV() {
+      let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+      csvContent += "รหัส,ชื่อโครงการ,หน่วยงาน,สังกัด,พื้นที่ดำเนินการ,กลุ่มอาชีพ,รูปแบบการเรียนรู้,เป้าหมาย,ผู้เข้าร่วม,ผู้ผ่าน,ติดตามได้,นำไปใช้,งบประมาณ,สถานะ,BP\n";
+
+      projectsData.forEach(p => {
+        const row = [
+          `"${p.id}"`,
+          `"${(p.name||'').replace(/"/g, '""')}"`,
+          `"${(p.agency||'').replace(/"/g, '""')}"`,
+          `"${(p.ministry||'').replace(/"/g, '""')}"`,
+          `"${(p.districts||'').replace(/"/g, '""')}"`,
+          `"${(p.sectors||'').replace(/"/g, '""')}"`,
+          `"${(p.learningType||'').replace(/"/g, '""')}"`,
+          p.target || 0,
+          p.participants || 0,
+          p.passed || 0,
+          p.tracked || 0,
+          p.used || 0,
+          p.budget || 0,
+          `"${p.status||''}"`,
+          `"${p.bp||''}"`
+        ];
+        csvContent += row.join(",") + "\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Learn_to_Earn_ChiangMai_Projects_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+
+    // --------------------------------------------------
+    // 4. Modal
+    // --------------------------------------------------
+    function openProjectModalByRef(index) {
+      if (projectsData[index]) openProjectModal(projectsData[index]);
+    }
+
+    function openProjectModal(p) {
+      document.getElementById('modal-code').innerText = p.id;
+      document.getElementById('modal-title').innerText = p.name;
+      
+      const badge = document.getElementById('modal-status-badge');
+      badge.innerText = p.status === 'เผยแพร่' ? '✓ เผยแพร่แล้ว' : 'ยังไม่เผยแพร่';
+      badge.className = p.status === 'เผยแพร่' ? 'px-2.5 py-1 rounded-full font-bold text-[11px] bg-emerald-100 text-emerald-800' : 'px-2.5 py-1 rounded-full font-bold text-[11px] bg-slate-200 text-slate-700';
+
+      const content = document.getElementById('modal-content');
+      content.innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div>
+            <span class="text-slate-400 block font-bold text-[10px]">หน่วยงานดำเนินงาน</span>
+            <span class="font-bold text-slate-800 text-sm">${p.agency}</span>
+            <span class="text-slate-500 block text-[11px]">สังกัด: ${p.ministry}</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-bold text-[10px]">งบประมาณโครงการ</span>
+            <span class="font-extrabold text-teal-700 text-base">${p.budget > 0 ? p.budget.toLocaleString() + ' บาท' : 'ไม่ระบุงบ / งบปกติ'}</span>
+            <span class="text-slate-500 block text-[11px]">เสนอ Best Practice: <strong>${p.bp}</strong></span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
+          <div class="p-2.5 bg-white border border-slate-200 rounded-xl">
+            <span class="text-slate-400 text-[10px] block">เป้าหมาย</span>
+            <span class="text-base font-extrabold text-slate-800">${(p.target||0).toLocaleString()}</span>
+          </div>
+          <div class="p-2.5 bg-white border border-slate-200 rounded-xl">
+            <span class="text-slate-400 text-[10px] block">ผู้เข้าร่วมจริง</span>
+            <span class="text-base font-extrabold text-amber-600">${(p.participants||0).toLocaleString()}</span>
+          </div>
+          <div class="p-2.5 bg-white border border-slate-200 rounded-xl">
+            <span class="text-slate-400 text-[10px] block">ผู้ผ่านกิจกรรม</span>
+            <span class="text-base font-extrabold text-emerald-600">${(p.passed||0).toLocaleString()}</span>
+          </div>
+          <div class="p-2.5 bg-rose-50 border border-rose-200 rounded-xl">
+            <span class="text-rose-800 text-[10px] block font-bold">นำไปใช้จริง</span>
+            <span class="text-base font-extrabold text-rose-600">${(p.used||0).toLocaleString()}</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pt-2">
+          <div class="border-b border-slate-100 pb-2">
+            <span class="font-bold text-slate-700 block mb-0.5"><i class="fa-solid fa-map-pin text-teal-600 mr-1"></i> พื้นที่ดำเนินการ:</span>
+            <p class="text-slate-600">${p.districts}</p>
+          </div>
+
+          <div class="border-b border-slate-100 pb-2">
+            <span class="font-bold text-slate-700 block mb-0.5"><i class="fa-solid fa-briefcase text-indigo-600 mr-1"></i> กลุ่มอาชีพและทักษะ:</span>
+            <p class="text-slate-600">${p.sectors}</p>
+          </div>
+
+          <div class="border-b border-slate-100 pb-2">
+            <span class="font-bold text-slate-700 block mb-0.5"><i class="fa-solid fa-graduation-cap text-amber-600 mr-1"></i> รูปแบบการเรียนรู้ & ระดับการศึกษา:</span>
+            <p class="text-slate-600">${p.learningType} (${p.education})</p>
+          </div>
+
+          <div>
+            <span class="font-bold text-slate-700 block mb-0.5"><i class="fa-solid fa-bullseye text-rose-600 mr-1"></i> ผลลัพธ์และสิ่งที่เกิดขึ้น:</span>
+            <p class="text-slate-600">${p.outcomes}</p>
+          </div>
+        </div>
+      `;
+
+      const modal = document.getElementById('project-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeProjectModal() {
+      const modal = document.getElementById('project-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+
+    // --------------------------------------------------
+    // 5. 3 Strategic Questions Engine & Dropdown Handler
+    // --------------------------------------------------
+    function handlePositionChange() {
+      const val = document.getElementById('resp-position').value;
+      const otherInput = document.getElementById('resp-position-other');
+      if (val === 'อื่นๆ') {
+        otherInput.classList.remove('hidden');
+        otherInput.focus();
+      } else {
+        otherInput.classList.add('hidden');
+      }
+      autoSaveDiscussionDraft();
+    }
+
+    function handleAgencyChange() {
+      const val = document.getElementById('resp-agency').value;
+      const otherInput = document.getElementById('resp-agency-other');
+      if (val === 'อื่นๆ') {
+        otherInput.classList.remove('hidden');
+        otherInput.focus();
+      } else {
+        otherInput.classList.add('hidden');
+      }
+      autoSaveDiscussionDraft();
+    }
+
+    function appendTagToField(fieldId, text) {
+      const el = document.getElementById(fieldId);
+      if (!el) return;
+      if (el.value && !el.value.endsWith('\n')) {
+        el.value += '\n' + text;
+      } else {
+        el.value += text;
+      }
+      autoSaveDiscussionDraft();
+    }
+
+    function loadSavedDraftAnswers() {
+      const fields = ['resp-position', 'resp-position-other', 'resp-agency', 'resp-agency-other', 'resp-q1', 'resp-q2', 'resp-q3-give', 'resp-q3-take', 'resp-remarks'];
+      fields.forEach(f => {
+        const saved = localStorage.getItem(`l2e_v3_${f}`);
+        if (saved && document.getElementById(f)) {
+          document.getElementById(f).value = saved;
+        }
+        if (document.getElementById(f)) {
+          document.getElementById(f).oninput = autoSaveDiscussionDraft;
+        }
+      });
+      handlePositionChange();
+      handleAgencyChange();
+    }
+
+    function autoSaveDiscussionDraft() {
+      const fields = ['resp-position', 'resp-position-other', 'resp-agency', 'resp-agency-other', 'resp-q1', 'resp-q2', 'resp-q3-give', 'resp-q3-take', 'resp-remarks'];
+      fields.forEach(f => {
+        const el = document.getElementById(f);
+        if (el) localStorage.setItem(`l2e_v3_${f}`, el.value);
+      });
+    }
+
+    function getDiscussionFormData() {
+      const posVal = document.getElementById('resp-position').value;
+      const posOther = document.getElementById('resp-position-other').value.trim();
+      const finalPosition = (posVal === 'อื่นๆ' && posOther) ? `อื่นๆ (${posOther})` : (posVal || 'ไม่ระบุตำแหน่ง');
+
+      const agencyVal = document.getElementById('resp-agency').value;
+      const agencyOther = document.getElementById('resp-agency-other').value.trim();
+      const finalAgency = (agencyVal === 'อื่นๆ' && agencyOther) ? `อื่นๆ (${agencyOther})` : (agencyVal || 'ไม่ระบุหน่วยงาน');
+
+      return {
+        position: String(finalPosition),
+        agency: String(finalAgency),
+        q1_tracking: String(document.getElementById('resp-q1').value.trim()),
+        q2_skills: String(document.getElementById('resp-q2').value.trim()),
+        q3_give: String(document.getElementById('resp-q3-give').value.trim()),
+        q3_take: String(document.getElementById('resp-q3-take').value.trim()),
+        remarks: String(document.getElementById('resp-remarks').value.trim())
+      };
+    }
+
+    function saveDiscussionToGoogleSheet() {
+      const form = getDiscussionFormData();
+      const btn = document.getElementById('btn-save-sheet');
+
+      if (!form.q1_tracking && !form.q2_skills && !form.q3_give && !form.q3_take) {
+        showToast('กรุณากรอกความคิดเห็นในข้อใดข้อหนึ่งก่อนกดบันทึกครับ', false);
+        return;
+      }
+
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> กำลังบันทึกลง Sheets...';
+
+      // Always save locally as fallback
+      autoSaveDiscussionDraft();
+
+      // Check if running in Google Apps Script environment
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            btn.innerHTML = '<i class="fa-solid fa-circle-check text-white mr-1"></i> ส่งคำตอบสำเร็จแล้ว!';
+            setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> บันทึกคำตอบลง Google Sheets'; }, 3500);
+            showToast('✓ บันทึกคำตอบลงใน Google Sheets เรียบร้อยแล้ว', true);
+          })
+          .withFailureHandler(function(err) {
+            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> บันทึกคำตอบลง Google Sheets';
+            showToast('เกิดข้อผิดพลาด: ' + (err.message || err), false);
+          })
+          .saveStrategicAnswers(form);
+      } else {
+        setTimeout(() => {
+          btn.innerHTML = '<i class="fa-solid fa-circle-check text-white mr-1"></i> บันทึกร่างในเครื่องสำเร็จ';
+          setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> บันทึกคำตอบลง Google Sheets'; }, 2500);
+          showToast('✓ บันทึกร่างคำตอบในเครื่องแล้ว (ทำงานสดเมื่อรันบน GAS)', true);
+        }, 500);
+      }
+    }
+
+    function copyDiscussionMinutes() {
+      const f = getDiscussionFormData();
+      let text = `📋 บันทึกคำตอบ 3 คำถามชวนคุยยุทธศาสตร์ Learn to Earn เชียงใหม่\n`;
+      text += `สำนักงานศึกษาธิการจังหวัดเชียงใหม่ (ศธจ.เชียงใหม่)\n`;
+      text += `ตำแหน่ง: ${f.position} | หน่วยงาน: ${f.agency}\n`;
+      text += `วันที่: ${new Date().toLocaleDateString('th-TH')}\n`;
+      text += `====================================================\n\n`;
+
+      text += `【ข้อที่ 1 (ปิดช่องว่างข้อมูล & ติดตามผล)】\n`;
+      text += `คำถาม: อะไรคือวิธีที่ง่ายและเป็นไปได้จริงที่สุด ในการติดตามรายได้/การใช้ทักษะจริง?\n`;
+      text += `คำตอบ:\n${f.q1_tracking || '(ยังไม่ระบุ)'}\n\n`;
+
+      text += `【ข้อที่ 2 (ปิดช่องว่างการกระจายตัว & หลักสูตรพื้นที่)】\n`;
+      text += `คำถาม: ควรเติมทักษะหรือสร้างความร่วมมือในเรื่องใดเพิ่มขึ้นในพื้นที่เชียงใหม่?\n`;
+      text += `คำตอบ:\n${f.q2_skills || '(ยังไม่ระบุ)'}\n\n`;
+
+      text += `【ข้อที่ 3 (ปิดช่องว่างการเชื่อมต่อ & แชร์ทรัพยากร Win-Win)】\n`;
+      text += `• สิ่งที่หน่วยงานพร้อมสนับสนุน (GIVE): ${f.q3_give || '(ยังไม่ระบุ)'}\n`;
+      text += `• สิ่งที่อยากให้เพื่อนภาคีหนุนเสริม (TAKE): ${f.q3_take || '(ยังไม่ระบุ)'}\n\n`;
+
+      if (f.remarks) {
+        text += `ข้อคิดเห็นเพิ่มเติม: ${f.remarks}\n`;
+      }
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('✓ คัดลอกคำตอบ 3 ข้อลง Clipboard เรียบร้อยแล้ว', true);
+      });
+    }
+
+
+    // --------------------------------------------------
+    // 6. Chart.js Initializer (Safe Destroy & Re-render)
+    // --------------------------------------------------
+    function initChartsSafely() {
+      if (typeof Chart === 'undefined') {
+        setTimeout(initChartsSafely, 150);
+        return;
+      }
+
+      try {
+        const el1 = document.getElementById('chainChart');
+        if (el1) {
+          if (chartInstance1) chartInstance1.destroy();
+          chartInstance1 = new Chart(el1.getContext('2d'), {
+            type: 'bar',
+            data: {
+              labels: ['3.1 แนะแนว', '3.2 หลักสูตร', '3.3 เรียนคู่ทำงาน', '3.4 ทวิภาคี', '3.6 Reskill', '3.7 กลุ่มเป้าหมาย', '3.5 Credit Bank'],
+              datasets: [{
+                label: 'โครงการที่รายงาน',
+                data: [10, 21, 18, 8, 15, 11, 0],
+                backgroundColor: [
+                  'rgba(245, 158, 11, 0.85)',
+                  'rgba(217, 119, 6, 0.95)',
+                  'rgba(13, 148, 136, 0.9)',
+                  'rgba(20, 184, 166, 0.9)',
+                  'rgba(14, 116, 144, 0.9)',
+                  'rgba(99, 102, 241, 0.85)',
+                  'rgba(244, 63, 94, 0.85)'
+                ],
+                borderRadius: 8
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { beginAtZero: true, max: 24, ticks: { color: '#64748b' }, grid: { color: 'rgba(226, 232, 240, 0.7)' } },
+                x: { ticks: { color: '#334155', font: { family: 'Prompt', size: 11 } }, grid: { display: false } }
+              }
+            }
+          });
+        }
+
+        const el2 = document.getElementById('districtChart');
+        if (el2) {
+          if (chartInstance2) chartInstance2.destroy();
+          chartInstance2 = new Chart(el2.getContext('2d'), {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+              labels: ['อ.เมืองเชียงใหม่', 'อ.แม่ริม', 'อ.สันทราย', 'อ.หางดง', 'อ.ฝาง', 'อำเภออื่นๆ'],
+              datasets: [{
+                data: [13, 8, 4, 3, 3, 2],
+                backgroundColor: [
+                  'rgba(99, 102, 241, 0.95)', 
+                  'rgba(129, 140, 248, 0.85)', 
+                  'rgba(165, 180, 252, 0.75)', 
+                  'rgba(148, 163, 184, 0.65)', 
+                  'rgba(148, 163, 184, 0.55)', 
+                  'rgba(203, 213, 225, 0.7)'
+                ],
+                borderRadius: 6
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { beginAtZero: true, ticks: { color: '#64748b', stepSize: 2 }, grid: { color: 'rgba(226, 232, 240, 0.7)' } },
+                y: { ticks: { color: '#334155', font: { family: 'Prompt' } }, grid: { display: false } }
+              }
+            }
+          });
+        }
+
+        const el3 = document.getElementById('sectorChart');
+        if (el3) {
+          if (chartInstance3) chartInstance3.destroy();
+          chartInstance3 = new Chart(el3.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+              labels: ['อาหาร/เครื่องดื่ม (8)', 'หัตถกรรม/ประดิษฐ์ (5)', 'เกษตร/ท่องเที่ยว (4)', 'ช่างชุมชน (3)', 'ดิจิทัล/คอนเทนต์ (2)'],
+              datasets: [{
+                data: [8, 5, 4, 3, 2],
+                backgroundColor: [
+                  'rgba(244, 63, 94, 0.9)', 
+                  'rgba(251, 146, 60, 0.9)', 
+                  'rgba(234, 179, 8, 0.9)', 
+                  'rgba(13, 148, 136, 0.9)', 
+                  'rgba(99, 102, 241, 0.9)'
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 2
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { 
+                  position: 'right', 
+                  labels: { color: '#334155', font: { family: 'Prompt', size: 11 }, boxWidth: 12 } 
+                }
+              },
+              cutout: '65%'
+            }
+          });
+        }
+      } catch (err) {
+        console.error("Error drawing charts:", err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initChartsSafely();
+      populateFilterDropdowns();
+      applyProjectFilters();
+      loadSavedDraftAnswers();
+      setTimeout(refreshData, 800);
+    });
+  </script>
+</body>
+</html>
