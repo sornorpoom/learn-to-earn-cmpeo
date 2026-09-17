@@ -23,17 +23,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
   }
 
-  try {
-    const formData = req.body;
-    if (!formData) {
-      return res.status(400).json({ success: false, error: 'Missing form data' });
-    }
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const formData = body.formData || body;
+    const gasUrl = body.gasUrl || process.env.GAS_WEBHOOK_URL || '';
 
-    // Google Apps Script Webhook URL (if configured)
-    const GAS_WEBHOOK_URL = process.env.GAS_WEBHOOK_URL || '';
-
-    if (GAS_WEBHOOK_URL) {
-      const gasResponse = await fetch(GAS_WEBHOOK_URL, {
+    if (gasUrl) {
+      const gasResponse = await fetch(gasUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -41,7 +36,13 @@ export default async function handler(req, res) {
           formData: formData
         })
       });
-      const result = await gasResponse.json();
+      const text = await gasResponse.text();
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (e) {
+        result = { raw: text };
+      }
       return res.status(200).json({ success: true, result });
     }
 

@@ -27,13 +27,23 @@ function doGet(e) {
 
 function doPost(e) {
   try {
-    var postData = JSON.parse(e.postData.contents);
-    if (postData.action === 'saveResponses' || postData.action === 'saveNotes') {
-      var result = saveStrategicAnswers(postData.formData);
-      return ContentService.createTextOutput(JSON.stringify({ success: true, result: result }))
-        .setMimeType(ContentService.MimeType.JSON);
+    var postData;
+    if (e && e.postData && e.postData.contents) {
+      try {
+        postData = JSON.parse(e.postData.contents);
+      } catch (err) {
+        postData = e.parameter || {};
+      }
+    } else if (e && e.parameter) {
+      postData = e.parameter;
+    } else {
+      postData = {};
     }
-    return ContentService.createTextOutput(JSON.stringify({ success: false, error: 'Unknown action' }))
+
+    var formData = postData.formData || postData;
+    var result = saveStrategicAnswers(formData);
+
+    return ContentService.createTextOutput(JSON.stringify({ success: true, result: result }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ success: false, error: err.toString() }))

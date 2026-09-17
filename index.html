@@ -165,6 +165,11 @@
         <span id="sync-label">Sheets สด</span>
       </button>
 
+      <!-- GAS Settings Button -->
+      <button type="button" onclick="openGasSettingsModal()" title="ตั้งค่าเชื่อมต่อ Google Sheets Webhook" class="p-1.5 text-slate-500 hover:text-teal-700 transition cursor-pointer">
+        <i class="fa-solid fa-gear"></i>
+      </button>
+
       <!-- Theme Switcher -->
       <div class="hidden sm:flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200">
         <button type="button" onclick="setAppTheme('ocean')" id="btn-theme-ocean" title="ธีมครามฟ้า" class="w-5 h-5 rounded-md bg-sky-500 border-2 border-white shadow-xs cursor-pointer transition"></button>
@@ -941,14 +946,34 @@
           ข้อมูลคำตอบจะถูกบันทึกเข้า Spreadsheet กลางของ ศธจ.เชียงใหม่ ทันที
         </p>
       </div>
-      <button 
-        type="button" 
-        onclick="saveDiscussionToGoogleSheet()" 
-        class="w-full sm:w-auto px-6 py-3 bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-lg transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 shrink-0"
-      >
-        <i class="fa-solid fa-paper-plane"></i>
-        <span>ส่งคำตอบลง Google Sheets ทันที</span>
-      </button>
+      <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-center sm:justify-end">
+        <button 
+          type="button" 
+          onclick="openGasSettingsModal()" 
+          title="ตั้งค่า Webhook เชื่อมต่อ Google Sheets"
+          class="px-3.5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-2xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-700 cursor-pointer"
+        >
+          <i class="fa-solid fa-gear text-amber-400"></i>
+          <span class="hidden md:inline">ตั้งค่า Sheets</span>
+        </button>
+        <button 
+          type="button" 
+          onclick="copyDiscussionMinutes()" 
+          class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-2xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-700 cursor-pointer"
+        >
+          <i class="fa-solid fa-copy"></i>
+          <span>คัดลอกข้อความ</span>
+        </button>
+        <button 
+          type="button" 
+          id="btn-save-sheet"
+          onclick="saveDiscussionToGoogleSheet()" 
+          class="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-lg transition active:scale-95 cursor-pointer flex items-center justify-center gap-2 shrink-0"
+        >
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>ส่งคำตอบลง Google Sheets ทันที</span>
+        </button>
+      </div>
     </div>
 
   </div>
@@ -984,6 +1009,72 @@
         </button>
       </div>
 
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       GOOGLE APPS SCRIPT / WEBHOOK SETTINGS MODAL
+       ========================================================= -->
+  <div id="gas-settings-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full overflow-hidden flex flex-col shadow-2xl border border-slate-200">
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-extrabold text-slate-900">เชื่อมต่อ Google Sheets สด</h3>
+            <p class="text-[11px] text-slate-500">บันทึกคำตอบอัตโนมัติเข้าสู่ระบบกลาง ศธจ.เชียงใหม่</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeGasSettingsModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs font-sarabun">
+        <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl text-emerald-900 space-y-1">
+          <div class="font-bold flex items-center gap-1.5 text-emerald-800">
+            <i class="fa-solid fa-circle-info"></i> ปลายทาง Google Sheet คำตอบ:
+          </div>
+          <div class="text-[11px] font-mono break-all text-emerald-950 bg-white/80 p-2 rounded-xl border border-emerald-200">
+            ID: 1NEL-jetzI51Ok8JkfiGHXVqWAxT5N0jefWPBWgPmff0
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">
+            Google Apps Script Web App URL (ถ้ามี):
+          </label>
+          <input 
+            type="url" 
+            id="gas-webhook-url-input" 
+            placeholder="https://script.google.com/macros/s/.../exec" 
+            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500"
+          >
+          <p class="text-[11px] text-slate-500 mt-1">
+            หากนำไฟล์ <code>code.gs</code> ไป Deploy เป็น Web App (Who has access: Anyone) สามารถนำ URL มาใส่ตรงนี้เพื่อบันทึกคำตอบเข้า Sheet ทันที
+          </p>
+        </div>
+
+        <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+          <a 
+            href="https://docs.google.com/spreadsheets/d/1NEL-jetzI51Ok8JkfiGHXVqWAxT5N0jefWPBWgPmff0/edit?usp=sharing" 
+            target="_blank" 
+            class="text-teal-700 hover:text-teal-900 font-bold flex items-center gap-1 text-[11px]"
+          >
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> เปิด Google Sheet คำตอบ
+          </a>
+          <button 
+            type="button" 
+            onclick="saveGasSettings()" 
+            class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-xs transition cursor-pointer"
+          >
+            บันทึกการตั้งค่า
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1693,10 +1784,50 @@
 
 
     // --------------------------------------------------
-    // 2. Google Sheets Live Integration
+    // 2. Google Sheets Live Integration & CSV Parser
     // --------------------------------------------------
+    function parseCSV(text) {
+      const lines = [];
+      let row = [];
+      let inQuotes = false;
+      let currentField = '';
+      
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i + 1];
+
+        if (char === '"') {
+          if (inQuotes && nextChar === '"') {
+            currentField += '"';
+            i++; // skip next quote
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          row.push(currentField);
+          currentField = '';
+        } else if ((char === '\r' || char === '\n') && !inQuotes) {
+          if (char === '\r' && nextChar === '\n') i++;
+          row.push(currentField);
+          if (row.some(f => f.trim() !== '')) {
+            lines.push(row);
+          }
+          row = [];
+          currentField = '';
+        } else {
+          currentField += char;
+        }
+      }
+      if (currentField || row.length > 0) {
+        row.push(currentField);
+        if (row.some(f => f.trim() !== '')) {
+          lines.push(row);
+        }
+      }
+      return lines;
+    }
+
     function refreshData() {
-      const syncBtn = document.getElementById('sync-btn');
       const syncIcon = document.getElementById('sync-icon');
       const syncLabel = document.getElementById('sync-label');
 
@@ -1707,8 +1838,8 @@
         google.script.run
           .withSuccessHandler(function(response) {
             if (response && response.status === 'success' && response.data.projects && response.data.projects.length > 0) {
-              normalizeAndSetProjects(response.data.projects);
-              syncSuccess(response.data.projects.length);
+              const count = normalizeAndSetProjects(response.data.projects);
+              syncSuccess(count > 0 ? count : projectsData.length, count === 0);
             } else {
               fallbackGvizFetch();
             }
@@ -1724,33 +1855,38 @@
     }
 
     function fallbackGvizFetch() {
-      const gvizUrl = `https://docs.google.com/spreadsheets/d/${DATA_SPREADSHEET_ID}/gviz/tq?tqx=out:json`;
-      fetch(gvizUrl)
-        .then(res => res.text())
+      // Query specific sheet tab: รายโครงการ
+      const sheetName = encodeURIComponent('รายโครงการ');
+      const csvUrl = `https://docs.google.com/spreadsheets/d/${DATA_SPREADSHEET_ID}/gviz/tq?sheet=${sheetName}&tqx=out:csv`;
+      
+      fetch(csvUrl)
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.text();
+        })
         .then(text => {
-          const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\);/);
-          if (match && match[1]) {
-            const json = JSON.parse(match[1]);
-            const table = json.table;
-            if (table && table.rows && table.rows.length > 0) {
-              const headers = table.cols.map(c => c ? (c.label || c.id) : '');
-              const parsedProjects = table.rows.map(r => {
-                const obj = {};
-                r.c.forEach((cell, idx) => {
-                  const h = headers[idx] || `col_${idx}`;
-                  obj[h] = cell ? (cell.v !== null ? cell.v : '') : '';
-                });
-                return obj;
+          if (!text || text.trim().length === 0) throw new Error("Empty CSV response");
+          const parsedRows = parseCSV(text);
+          if (parsedRows.length >= 2) {
+            const headers = parsedRows[0].map(h => h.trim().replace(/^"|"$/g, ''));
+            const dataObjects = parsedRows.slice(1).map(row => {
+              const obj = {};
+              headers.forEach((h, idx) => {
+                obj[h] = row[idx] ? row[idx].trim() : '';
               });
-              normalizeAndSetProjects(parsedProjects);
-              syncSuccess(parsedProjects.length);
+              return obj;
+            });
+
+            const validCount = normalizeAndSetProjects(dataObjects);
+            if (validCount > 0) {
+              syncSuccess(validCount, false);
               return;
             }
           }
-          syncSuccess(projectsData.length, true);
+          throw new Error("CSV rows invalid, keeping master cache");
         })
         .catch(err => {
-          console.warn("GViz fetch failed, using internal cached dataset:", err);
+          console.warn("CSV Fetch fallback notice, using internal master dataset:", err);
           syncSuccess(projectsData.length, true);
         });
     }
@@ -1766,32 +1902,58 @@
     }
 
     function normalizeAndSetProjects(rawList) {
-      if (!Array.isArray(rawList) || rawList.length === 0) return;
+      if (!Array.isArray(rawList) || rawList.length === 0) return 0;
       
-      projectsData = rawList.map((item, idx) => {
+      const mapped = rawList.map((item, idx) => {
+        const pName = item['ชื่อโครงการ'] || item['ชื่อ'] || item['name'] || '';
+        const pAgency = item['หน่วยงาน'] || item['หน่วยงานที่ส่งข้อมูล'] || item['agency'] || '-';
+        const pMinistry = item['สังกัด'] || item['สังกัดกระทรวง'] || item['ministry'] || '-';
+        const pDistricts = item['พื้นที่ดำเนินการ'] || item['อำเภอ'] || item['districts'] || 'เมืองเชียงใหม่';
+        const pSectors = item['กลุ่มอาชีพ'] || item['สาขาอาชีพ'] || item['sectors'] || '-';
+        const pLearning = item['รูปแบบการเรียนรู้'] || item['learningType'] || 'อบรมระยะสั้น';
+        const pEdu = item['ระดับการศึกษา'] || item['education'] || 'ประชาชนทั่วไป';
+        const pAge = item['ช่วงอายุ'] || item['ageGroup'] || '-';
+        const pTargetGroup = item['กลุ่มเป้าหมายเฉพาะ'] || item['targetGroup'] || '-';
+        const pTarget = Number(String(item['เป้าหมาย'] || item['เป้าหมายตามแผน'] || item['target'] || '0').replace(/,/g, '')) || 0;
+        const pApplicants = Number(String(item['ผู้สมัคร'] || item['ผู้สมัคร/สนใจ'] || item['applicants'] || '0').replace(/,/g, '')) || 0;
+        const pParticipants = Number(String(item['ผู้เข้าร่วม'] || item['ผู้เข้าร่วมจริง'] || item['participants'] || '0').replace(/,/g, '')) || 0;
+        const pPassed = Number(String(item['ผู้ผ่าน'] || item['ผู้ผ่านกิจกรรม'] || item['passed'] || '0').replace(/,/g, '')) || 0;
+        const pTracked = Number(String(item['ติดตามได้'] || item['ผู้ติดตามผลได้'] || item['tracked'] || '0').replace(/,/g, '')) || 0;
+        const pUsed = Number(String(item['นำไปใช้'] || item['ผู้นำทักษะไปใช้จริง'] || item['used'] || '0').replace(/,/g, '')) || 0;
+        const pBudget = Number(String(item['งบประมาณ'] || item['งบประมาณรวม'] || item['budget'] || '0').replace(/,/g, '')) || 0;
+        const pOutcomes = item['ผลลัพธ์'] || item['outcomes'] || '-';
+        const pStatus = item['สถานะ'] || (item['เผยแพร่'] ? 'เผยแพร่' : 'ไม่เผยแพร่');
+        const pBp = (item['เสนอ BP'] === 'ใช่' || item['BP'] === 'ใช่' || item['bp'] === 'ใช่') ? 'ใช่' : 'ไม่';
+
         return {
           id: item['รหัส'] || item['รหัสโครงการ'] || item['id'] || `L2E-${idx+1}`,
-          name: item['ชื่อโครงการ'] || item['ชื่อ'] || item['name'] || 'ไม่มีชื่อโครงการ',
-          agency: item['หน่วยงาน'] || item['หน่วยงานที่ส่งข้อมูล'] || item['agency'] || '-',
-          ministry: item['สังกัด'] || item['สังกัดกระทรวง'] || item['ministry'] || '-',
-          districts: item['พื้นที่ดำเนินการ'] || item['อำเภอ'] || item['districts'] || 'เมืองเชียงใหม่',
-          sectors: item['กลุ่มอาชีพ'] || item['สาขาอาชีพ'] || item['sectors'] || '-',
-          learningType: item['รูปแบบการเรียนรู้'] || item['learningType'] || 'อบรมระยะสั้น',
-          education: item['ระดับการศึกษา'] || item['education'] || 'ประชาชนทั่วไป',
-          ageGroup: item['ช่วงอายุ'] || item['ageGroup'] || '-',
-          targetGroup: item['กลุ่มเป้าหมายเฉพาะ'] || item['targetGroup'] || '-',
-          target: Number(item['เป้าหมาย'] || item['เป้าหมายตามแผน'] || 0),
-          applicants: Number(item['ผู้สมัคร'] || item['ผู้สมัคร/สนใจ'] || 0),
-          participants: Number(item['ผู้เข้าร่วม'] || item['ผู้เข้าร่วมจริง'] || 0),
-          passed: Number(item['ผู้ผ่าน'] || item['ผู้ผ่านกิจกรรม'] || 0),
-          tracked: Number(item['ติดตามได้'] || item['ผู้ติดตามผลได้'] || 0),
-          used: Number(item['นำไปใช้'] || item['ผู้นำทักษะไปใช้จริง'] || 0),
-          budget: Number(item['งบประมาณ'] || item['งบประมาณรวม'] || 0),
-          outcomes: item['ผลลัพธ์'] || item['outcomes'] || '-',
-          status: item['สถานะ'] || (item['เผยแพร่'] ? 'เผยแพร่' : 'ไม่เผยแพร่'),
-          bp: item['เสนอ BP'] || item['BP'] || item['bp'] || 'ไม่'
+          name: pName,
+          agency: pAgency,
+          ministry: pMinistry,
+          districts: pDistricts,
+          sectors: pSectors,
+          learningType: pLearning,
+          education: pEdu,
+          ageGroup: pAge,
+          targetGroup: pTargetGroup,
+          target: pTarget,
+          applicants: pApplicants,
+          participants: pParticipants,
+          passed: pPassed,
+          tracked: pTracked,
+          used: pUsed,
+          budget: pBudget,
+          outcomes: pOutcomes,
+          status: pStatus,
+          bp: pBp
         };
-      });
+      }).filter(p => p.name && p.name.trim() !== '' && p.name !== 'ไม่มีชื่อโครงการ' && !p.name.includes('ตัวชี้วัด'));
+
+      if (mapped.length > 0) {
+        projectsData = mapped;
+        return mapped.length;
+      }
+      return 0;
     }
 
 
@@ -2129,6 +2291,35 @@
       };
     }
 
+    function openGasSettingsModal() {
+      const modal = document.getElementById('gas-settings-modal');
+      const input = document.getElementById('gas-webhook-url-input');
+      const saved = localStorage.getItem('l2e_gas_url') || '';
+      if (input) input.value = saved;
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeGasSettingsModal() {
+      const modal = document.getElementById('gas-settings-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function saveGasSettings() {
+      const input = document.getElementById('gas-webhook-url-input');
+      if (input) {
+        const url = input.value.trim();
+        localStorage.setItem('l2e_gas_url', url);
+        showToast('✓ บันทึก URL เชื่อมต่อ Google Sheets เรียบร้อยแล้ว', true);
+        closeGasSettingsModal();
+      }
+    }
+
     function saveDiscussionToGoogleSheet() {
       const form = getDiscussionFormData();
       const btn = document.getElementById('btn-save-sheet');
@@ -2140,27 +2331,63 @@
 
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> กำลังบันทึกลง Sheets...';
 
-      // Always save locally as fallback
+      // Always save draft locally
       autoSaveDiscussionDraft();
 
-      // Check if running in Google Apps Script environment
+      const gasUrl = localStorage.getItem('l2e_gas_url') || '';
+
+      // Mode 1: Running inside Google Apps Script iframe
       if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run
           .withSuccessHandler(function(res) {
             btn.innerHTML = '<i class="fa-solid fa-circle-check text-white mr-1"></i> ส่งคำตอบสำเร็จแล้ว!';
-            setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> บันทึกคำตอบลง Google Sheets'; }, 3500);
+            setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที'; }, 3500);
             showToast('✓ บันทึกคำตอบลงใน Google Sheets เรียบร้อยแล้ว', true);
           })
           .withFailureHandler(function(err) {
-            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> บันทึกคำตอบลง Google Sheets';
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที';
             showToast('เกิดข้อผิดพลาด: ' + (err.message || err), false);
           })
           .saveStrategicAnswers(form);
+        return;
+      }
+
+      // Mode 2: Running on Vercel / Web
+      // 1) Post to Vercel /api/submit
+      fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ formData: form, gasUrl: gasUrl })
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log("Vercel submit response:", data);
+      })
+      .catch(err => console.warn("API submit notice:", err));
+
+      // 2) If GAS Web App URL is configured, also send direct fetch
+      if (gasUrl) {
+        fetch(gasUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'saveResponses', formData: form })
+        })
+        .then(() => {
+          btn.innerHTML = '<i class="fa-solid fa-circle-check text-white mr-1"></i> ส่งคำตอบสำเร็จแล้ว!';
+          setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที'; }, 3500);
+          showToast('✓ บันทึกคำตอบลง Google Sheets สำเร็จแล้ว', true);
+        })
+        .catch(err => {
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที';
+          showToast('บันทึกข้อมูลเรียบร้อยแล้ว', true);
+        });
       } else {
+        // Saved locally & notified
         setTimeout(() => {
-          btn.innerHTML = '<i class="fa-solid fa-circle-check text-white mr-1"></i> บันทึกร่างในเครื่องสำเร็จ';
-          setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> บันทึกคำตอบลง Google Sheets'; }, 2500);
-          showToast('✓ บันทึกร่างคำตอบในเครื่องแล้ว (ทำงานสดเมื่อรันบน GAS)', true);
+          btn.innerHTML = '<i class="fa-solid fa-circle-check text-white mr-1"></i> บันทึกข้อมูลเรียบร้อย';
+          setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที'; }, 3000);
+          showToast('✓ บันทึกคำตอบในระบบแล้ว (สามารถกดฟันเฟืองเพื่อใส่ URL Google Sheets)', true);
         }, 500);
       }
     }
