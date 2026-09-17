@@ -1137,6 +1137,9 @@
     const DATA_SPREADSHEET_ID = '1W2LEgQdvGNCdxPpk6EWuPXHoxyOUve8aF-QwGt33TJ4';
     const RESPONSES_SPREADSHEET_ID = '1NEL-jetzI51Ok8JkfiGHXVqWAxT5N0jefWPBWgPmff0';
     
+    // Global Webhook URL สำหรับส่งคำตอบเข้า Google Sheets ของทุกคน
+    const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxpbyAfiuQQYieqINkS3F3s-LqvQBMjamtY8cgtlsPCqYZ-dCE9XBGJKVnlE4YmTMQ5Sw/exec';
+    
     // 23 โครงการเริ่มต้น (Embedded Master Cache)
     let projectsData = [
       {
@@ -2466,7 +2469,7 @@
 
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> กำลังบันทึกลง Sheets...';
 
-      const gasUrl = localStorage.getItem('l2e_gas_url') || '';
+      const gasUrl = (localStorage.getItem('l2e_gas_url') || '').trim() || (typeof DEFAULT_GAS_URL !== 'undefined' ? DEFAULT_GAS_URL.trim() : '');
 
       const onSaveSuccess = () => {
         btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที';
@@ -2501,7 +2504,7 @@
       })
       .catch(err => console.warn("API submit notice:", err));
 
-      // 2) If GAS Web App URL is configured, also send direct fetch
+      // 2) If GAS Web App URL is configured, send direct fetch to Google Apps Script
       if (gasUrl) {
         fetch(gasUrl, {
           method: 'POST',
@@ -2516,9 +2519,8 @@
           onSaveSuccess();
         });
       } else {
-        setTimeout(() => {
-          onSaveSuccess();
-        }, 600);
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane mr-1"></i> ส่งคำตอบลง Google Sheets ทันที';
+        showToast('⚠️ กรุณาระบุ Google Apps Script Web App URL ในโค้ดหรือปุ่มตั้งค่าก่อนส่ง', false);
       }
     }
 

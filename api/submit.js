@@ -23,9 +23,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
   }
 
+    const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxpbyAfiuQQYieqINkS3F3s-LqvQBMjamtY8cgtlsPCqYZ-dCE9XBGJKVnlE4YmTMQ5Sw/exec';
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const formData = body.formData || body;
-    const gasUrl = body.gasUrl || process.env.GAS_WEBHOOK_URL || '';
+    const gasUrl = body.gasUrl || process.env.GAS_WEBHOOK_URL || DEFAULT_GAS_URL;
 
     if (gasUrl) {
       const gasResponse = await fetch(gasUrl, {
